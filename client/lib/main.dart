@@ -1,4 +1,8 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MyApp());
@@ -62,8 +66,14 @@ class LoginCard extends StatelessWidget {
               const
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  // Handle login logic here
+                onPressed: () async {
+                  final response = await http.get(
+                    Uri.parse('https://jsonplaceholder.typicode.com/login.php'),
+                    headers: {
+                      'email': '',
+                      'password': ''
+                    },
+                  );
                 },
                 child:const Text('Login'),
               ),
@@ -101,8 +111,15 @@ class SignupCard extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  // Handle signup logic here
+                onPressed: () async {
+                  final response = await http.get(
+                    Uri.parse('https://jsonplaceholder.typicode.com/signup.php'),
+                    headers: {
+                      'fullname': '',
+                      'email': '',
+                      'password': ''
+                    },
+                  );
                 },
                 child:const Text('Signup'),
               ),
