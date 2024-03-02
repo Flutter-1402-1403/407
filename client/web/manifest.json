@@ -1,6 +1,6 @@
 {
-    "name": "imdb",
-    "short_name": "imdb",
+    "name": "login_totarial",
+    "short_name": "login_totarial",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

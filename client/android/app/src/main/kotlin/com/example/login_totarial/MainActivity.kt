@@ -1,4 +1,4 @@
-package com.example.imdb
+package com.example.login_totarial
 
 import io.flutter.embedding.android.FlutterActivity
 
