@@ -106,6 +106,10 @@ class SignupCard extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               const TextField(
+                decoration: InputDecoration(labelText: 'Phone Number'),
+              ),
+              const SizedBox(height: 10),
+              const TextField(
                 decoration: InputDecoration(labelText: 'Password'),
                 obscureText: true,
               ),
@@ -117,6 +121,7 @@ class SignupCard extends StatelessWidget {
                     headers: {
                       'fullname': '',
                       'email': '',
+                      'phone': '',
                       'password': ''
                     },
                   );

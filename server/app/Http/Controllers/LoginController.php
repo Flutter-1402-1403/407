@@ -16,10 +16,10 @@ class LoginController extends Controller
             if (Hash::check($request->password, $users->password)) {
                 $msg = "success " . $request->email;
             } else {
-                $msg = "email or password is not correct";
+                $msg = "Incorrect email or password.";
             }
         } else {
-            $msg = "not find username or email";
+            $msg = "Incorrect email or password.";
         }
 
         return response()->json($msg);

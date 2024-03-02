@@ -17,15 +17,15 @@ class RegisterController extends Controller
                     User::create([
                         'fullname' => $request->fullname,
                         'email' => $request->email,
-                        'password' => $request->password,
                         'phone' => $request->phone,
+                        'password' => $request->password,
                     ]); 
-                    $msg = "success " . $request->fullname;
+                    $msg = "Successfully logged in as: " . $request->fullname;
                 } else {
-                    $msg = "phone number invalid";
+                    $msg = "Invalid phone number.";
                 }
             } else {
-                $msg = "email does not exist or was misspelled";
+                $msg = "Invalid email address";
             }
         } else {
             $msg = "email or phone number already exist";
