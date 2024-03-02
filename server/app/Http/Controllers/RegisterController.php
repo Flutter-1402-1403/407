@@ -19,8 +19,8 @@ class RegisterController extends Controller
                         'email' => $request->email,
                         'password' => $request->password,
                         'phone' => $request->phone,
-                    ]);
-                    $msg = "success" . $request->fullname;
+                    ]); 
+                    $msg = "success " . $request->fullname;
                 } else {
                     $msg = "phone number invalid";
                 }

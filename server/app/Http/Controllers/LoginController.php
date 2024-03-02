@@ -14,7 +14,7 @@ class LoginController extends Controller
         $users = User::where('email', $request->email)->first();
         if (!empty($users->id)) {
             if (Hash::check($request->password, $users->password)) {
-                $msg = "success" . $request->fullname;
+                $msg = "success " . $request->email;
             } else {
                 $msg = "email or password is not correct";
             }
