@@ -1,12 +1,19 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:login_totarial/og.dart';
 import 'package:login_totarial/sign_up.dart';
 
 String register = "register";
 
 class LoginCard extends StatelessWidget {
-  const LoginCard({super.key});
+  LoginCard({super.key});
+
+  final loginUsername = TextEditingController();
+  final loginPassword = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -20,9 +27,9 @@ class LoginCard extends StatelessWidget {
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 100),
+                        const SizedBox(height: 70),
                         Image.asset("assets/imdb.png"),
-                        const SizedBox(height: 100),
+                        const SizedBox(height: 70),
                         Container(
                             color: Colors.white,
                             padding: const EdgeInsets.symmetric(
@@ -32,9 +39,10 @@ class LoginCard extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 TextFormField(
+                                  controller: loginUsername,
                                   decoration: InputDecoration(
-                                    label: const Text('Email'),
-                                    hintText: 'Enter Your Email',
+                                    label: const Text('Email / Phone Number'),
+                                    hintText: 'Enter Your Email / Phone Number',
                                     enabledBorder: OutlineInputBorder(
                                       borderSide:
                                           const BorderSide(color: Colors.grey),
@@ -58,6 +66,7 @@ class LoginCard extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 10),
                                 TextFormField(
+                                  controller: loginPassword,
                                   obscureText: true,
                                   decoration: InputDecoration(
                                     label: const Text('password'),
@@ -87,14 +96,26 @@ class LoginCard extends StatelessWidget {
                                   height: 22,
                                 ),
                                 SizedBox(
-                                  height: 65,
+                                  height: 50,
                                   width: double.infinity,
                                   child: ElevatedButton(
-                                    onPressed: () {
-                                      Get.to(const OgCard());
-                                      //what this bottun do
-                                     //agha amir inja
-
+                                    onPressed: () async {
+                                      http.post(
+                                        Uri.parse('https://jsonplaceholder.typicode.com/api/login'),
+                                        headers: {
+                                          HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+                                        },
+                                        body: jsonEncode({
+                                          'email': loginUsername.text,
+                                          'password': loginPassword.text,
+                                        }),
+                                      ).then((value) => {
+                                        if (value.statusCode != null) {
+                                          Get.to(const OgCard())
+                                        } else {
+                                                  
+                                        }
+                                      }).onError((error, stackTrace) => {});
                                     },
                                     style: ElevatedButton.styleFrom(
                                         shape: RoundedRectangleBorder(
@@ -117,9 +138,7 @@ class LoginCard extends StatelessWidget {
                                   width: double.infinity,
                                   child: ElevatedButton(
                                       onPressed: () {
-                                        //what this bottun do
                                       },
-                                      child: Text("I forgot my password"),
                                       style: ElevatedButton.styleFrom(
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
@@ -129,7 +148,8 @@ class LoginCard extends StatelessWidget {
                                               255, 255, 255, 255),
                                           textStyle: const TextStyle(
                                             fontSize: 20,
-                                          ))),
+                                          )),
+                                      child: const Text("I forgot my password")),
                                 ),
                                 const SizedBox(
                                   height: 33,
@@ -144,22 +164,17 @@ class LoginCard extends StatelessWidget {
                                         fontSize: 14,
                                       ),
                                     ),
-                                    const SizedBox(width: 35,),
+                                    const SizedBox(
+                                      width: 35,
+                                    ),
                                     ElevatedButton(
-                                      onPressed: () { Get.to(const SignUpCard());},
-                                      child: const Text("register"),
-                                      style: ElevatedButton.styleFrom(
-                                      //  alignment: marginAll(20,),
-                                        
-                                      )
-                                    )
+                                        onPressed: () {
+                                          Get.to(SignUpCard());
+                                        },
+                                        style: ElevatedButton.styleFrom(),
+                                        child: const Text("Sign Up"))
                                   ],
                                 )
-
-                                // new InkWell(
-                                //   child: new Text("data"),
-                                //   onTap: (){}
-                                // )
                               ],
                             ))
                       ],
