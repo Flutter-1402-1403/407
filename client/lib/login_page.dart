@@ -17,19 +17,21 @@ class LoginCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+     // physics: const NeverScrollableScrollPhysics(),
         child: ConstrainedBox(
             constraints: const BoxConstraints(),
             child: SizedBox(
                 height: MediaQuery.of(context).size.height,
-                child: SingleChildScrollView(
-                    reverse: true,
+                width: MediaQuery.of(context).size.width,
+                child: IntrinsicHeight(
+                    //reverse: true,
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 70),
+                        const SizedBox(height: 60),
                         Image.asset("assets/imdb.png"),
-                        const SizedBox(height: 70),
+                        const SizedBox(height: 114.8),
                         Container(
                             color: Colors.white,
                             padding: const EdgeInsets.symmetric(
@@ -100,22 +102,29 @@ class LoginCard extends StatelessWidget {
                                   width: double.infinity,
                                   child: ElevatedButton(
                                     onPressed: () async {
-                                      http.post(
-                                        Uri.parse('https://jsonplaceholder.typicode.com/api/login'),
-                                        headers: {
-                                          HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-                                        },
-                                        body: jsonEncode({
-                                          'email': loginUsername.text,
-                                          'password': loginPassword.text,
-                                        }),
-                                      ).then((value) => {
-                                        if (value.statusCode != null) {
-                                          Get.to(const OgCard())
-                                        } else {
-                                                  
-                                        }
-                                      }).onError((error, stackTrace) => {});
+                                      http
+                                          .post(
+                                            Uri.parse(
+                                                'https://jsonplaceholder.typicode.com/api/login'),
+                                            headers: {
+                                              HttpHeaders.contentTypeHeader:
+                                                  'application/json; charset=UTF-8',
+                                            },
+                                            body: jsonEncode({
+                                              'email': loginUsername.text,
+                                              'password': loginPassword.text,
+                                            }),
+                                          )
+                                          .then((value) => {
+                                                if (value.statusCode != null)
+                                                  {Get.to(const OgCard())}
+                                                else
+                                                  {}
+                                              })
+                                          .onError((error, stackTrace) => {
+
+                                          });
+                                      Get.to(OgCard());
                                     },
                                     style: ElevatedButton.styleFrom(
                                         shape: RoundedRectangleBorder(
@@ -137,8 +146,7 @@ class LoginCard extends StatelessWidget {
                                   height: 65,
                                   width: double.infinity,
                                   child: ElevatedButton(
-                                      onPressed: () {
-                                      },
+                                      onPressed: () {},
                                       style: ElevatedButton.styleFrom(
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
@@ -149,7 +157,8 @@ class LoginCard extends StatelessWidget {
                                           textStyle: const TextStyle(
                                             fontSize: 20,
                                           )),
-                                      child: const Text("I forgot my password")),
+                                      child:
+                                          const Text("I forgot my password")),
                                 ),
                                 const SizedBox(
                                   height: 33,
