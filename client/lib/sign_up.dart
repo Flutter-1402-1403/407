@@ -170,7 +170,7 @@ class SignUpCard extends StatelessWidget {
                                               'application/json; charset=UTF-8',
                                         },
                                         body: jsonEncode({
-                                          'fullname': signupFullname.text,
+                                          'name': signupFullname.text,
                                           'email': signupEmail.text,
                                           'phone': signupPhone.text,
                                           'password': signupPassword.text,

@@ -1,0 +1,11 @@
+{
+  "name": "project-imdb",
+  "main": "index.js",
+  "scripts": {
+    "setup": "node setup.js",
+    "start": " node ."
+  },
+  "dependencies": {
+    "sqlite3": "^5.1.7"
+  }
+}
