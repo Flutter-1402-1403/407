@@ -226,6 +226,7 @@ class SignUpCard extends StatelessWidget {
                                       timeInSecForIosWeb: 1,
                                       textColor: Colors.white,
                                       fontSize: 16.0);*/
+                                      Get.to(LoginCard());
                                     },
                                     style: ElevatedButton.styleFrom(),
                                     child: const Text("Login"))
