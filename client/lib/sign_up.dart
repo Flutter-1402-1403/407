@@ -6,8 +6,27 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:login_totarial/login_page.dart';
 import 'package:login_totarial/og.dart';
+import 'package:toastification/toastification.dart';
+import 'package:flutter/gestures.dart';
 
 String register = "register";
+
+// class SignUpCard extends StatefulWidget{
+//   const SignUpCard({super.key});
+
+//   @override
+//   State<StatefulWidget> createState() {
+//     return _SignUpCardState()
+//   }
+// }
+
+// class _SignUpCardState extends State<SignUpCard>{
+//   @override
+//   Widget build(BuildContext context) {
+//     return 
+//   }
+// }
+
 
 class SignUpCard extends StatelessWidget {
   SignUpCard({super.key});
@@ -16,38 +35,54 @@ class SignUpCard extends StatelessWidget {
   final signupEmail = TextEditingController();
   final signupPhone = TextEditingController();
   final signupPassword = TextEditingController();
-
+  final _signupcardKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-     Size size1 = MediaQuery.of(context).size;
+    // Size size1 = MediaQuery.of(context).size;
     return SingleChildScrollView(
         reverse: true,
-        physics: const NeverScrollableScrollPhysics(),
+        //physics: const NeverScrollableScrollPhysics(),
         child: ConstrainedBox(
-            constraints:const BoxConstraints(),
+            constraints: const BoxConstraints(),
             child: SizedBox(
-               // min.width: MediaQuery.of(context).size.height,
-               // min.height:  MediaQuery.of(context).size.height,
-                    child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                     //SizedBox(height: size1.height * 0.19),
-                     const SizedBox(height: 50),
-                    Image.asset("assets/imdb.png",height: size1.height * 0.35,),
-                     // SizedBox(height: size1.height * 0.05),
-                     const SizedBox(height: 60),
-                    Container(
-                        color: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 32, vertical: 44),
-                        height: 500,
+                // min.width: MediaQuery.of(context).size.height,
+                // min.height:  MediaQuery.of(context).size.height,
+                child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                //SizedBox(height: size1.height * 0.19),
+                // const SizedBox(height: 40),
+                Image.asset(
+                  "assets/imdb.png",
+                ),
+                // SizedBox(height: size1.height * 0.05),
+                const SizedBox(height: 50),
+                Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32, vertical: 10),
+                    height: 550,
+                    child: Form(
+                        key: _signupcardKey,
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             TextFormField(
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please Enter Your Full Name';
+                                }
+                                return null;
+                              },
                               controller: signupFullname,
                               decoration: InputDecoration(
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: const BorderSide(
+                                      color: Colors.red,
+                                      width: 1,
+                                    )),
                                 label: const Text('Full Name'),
                                 hintText: 'Enter Your Full Name',
                                 enabledBorder: OutlineInputBorder(
@@ -73,8 +108,23 @@ class SignUpCard extends StatelessWidget {
                             ),
                             const SizedBox(height: 10),
                             TextFormField(
+                              validator: (value) {
+                               RegExp emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@gmail\.com$');
+                                if (value == null || value.isEmpty) {
+                                  return 'Please Enter Your Email';
+                                }else if(!emailRegex.hasMatch(value)){
+                                  return 'Wrong Email';
+                                }
+                                return null;
+                              },
                               controller: signupEmail,
                               decoration: InputDecoration(
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: const BorderSide(
+                                      color: Colors.red,
+                                      width: 1,
+                                    )),
                                 label: const Text('Email'),
                                 hintText: 'Enter Your Email',
                                 enabledBorder: OutlineInputBorder(
@@ -100,8 +150,23 @@ class SignUpCard extends StatelessWidget {
                             ),
                             const SizedBox(height: 10),
                             TextFormField(
+                              validator: (value) {
+                                 RegExp PhonenumberRegex = RegExp(r'^09\d{9}$');
+                                if (value == null || value.isEmpty) {
+                                  return 'Please Enter Your Phone Number';
+                                } else if (!PhonenumberRegex.hasMatch(value)){
+                                  return "Your Phone number sholud start with 09 and have 11 number";
+                                }
+                                return null;
+                              },
                               controller: signupPhone,
                               decoration: InputDecoration(
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: const BorderSide(
+                                      color: Colors.red,
+                                      width: 1,
+                                    )),
                                 label: const Text('Phone Number'),
                                 hintText: 'Enter Your Phone Number',
                                 enabledBorder: OutlineInputBorder(
@@ -127,9 +192,24 @@ class SignUpCard extends StatelessWidget {
                             ),
                             const SizedBox(height: 10),
                             TextFormField(
+                              validator: (value) {
+                                RegExp PasswordRegex = RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)(?=.*\w).{8,}$');
+                                if (value == null || value.isEmpty) {
+                                  return 'Please Enter Your Password';
+                                } else if (!PasswordRegex.hasMatch(value)){
+                                    return"Your Password must contian character and numbers and words";
+                                }
+                                return null;
+                              },
                               controller: signupPassword,
                               obscureText: true,
                               decoration: InputDecoration(
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: const BorderSide(
+                                      color: Colors.red,
+                                      width: 1,
+                                    )),
                                 label: const Text('password'),
                                 hintText: 'Enter Your Password',
                                 enabledBorder: OutlineInputBorder(
@@ -154,13 +234,25 @@ class SignUpCard extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(
-                              height: 22,
+                              height: 20,
                             ),
                             SizedBox(
                               height: 50,
                               width: double.infinity,
                               child: ElevatedButton(
                                 onPressed: () {
+                                  if (_signupcardKey.currentState!.validate()) {
+                                    //Get.to(LoginCard());
+                                    toastification.show(
+                                        context: context,
+                                        title: const Text(
+                                            "Registering information"),
+                                        autoCloseDuration:
+                                            const Duration(seconds: 3));
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text("wait for login")));
+                                  } else {}
                                   http
                                       .post(
                                         Uri.parse(
@@ -177,6 +269,7 @@ class SignUpCard extends StatelessWidget {
                                         }),
                                       )
                                       .then((value) => {
+                                        
                                             if (value.statusCode != null)
                                               {
                                                 //email and password is ok
@@ -201,7 +294,7 @@ class SignUpCard extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(
-                              height: 5,
+                              height: 25,
                             ),
                             Row(
                               children: [
@@ -214,9 +307,58 @@ class SignUpCard extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(
-                                  width: 35,
+                                  width: 55,
                                 ),
-                                ElevatedButton(
+                                
+                                // GestureDetector(
+                                //   child: Text('C'),
+                                //   onTap: () {
+                                //     Get.to(LoginCard());
+                                //     //go to destination page
+                                //   },
+                                // )
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      const TextSpan(
+                                        text:
+                                            "By  ",
+                                      ),
+                                     TextSpan(
+                                        text: "Login",
+                                        style: const TextStyle(
+                                          color: Color.fromARGB(255, 0, 0, 0),
+                                          fontSize: 22
+                                        ),
+                                        recognizer:  TapGestureRecognizer()
+                                          ..onTap =
+                                              () => Get.to(LoginCard()),
+                                      ),
+                                    //  const TextSpan(text: "and our "),
+                                    //   TextSpan(
+                                    //     text: "Terms and Conditions ",
+                                    //     style: const TextStyle(
+                                    //       color: Colors.lightGreen,
+                                    //     ),
+                                    //     recognizer:  TapGestureRecognizer()
+                                    //       ..onTap = () =>
+                                    //           print("Terms and Conditions"),
+                                    //   ),
+                                    //   const TextSpan(text: "and "),
+                                    //   TextSpan(
+                                    //     text: "Cookie Statement",
+                                    //     style: const TextStyle(
+                                    //       color: Colors.lightGreen,
+                                    //     ),
+                                    //     recognizer:  TapGestureRecognizer()
+                                    //       ..onTap =
+                                    //           () => print("Cookie Statement"),
+                                    //   ),
+                                    //   const TextSpan(text: "."),
+                                    ],
+                                  ),
+                                ),
+                                /*  ElevatedButton(
                                     onPressed: () {
                                       //email and password is ok
                                       /* Fluttertoast.showToast(
@@ -229,12 +371,12 @@ class SignUpCard extends StatelessWidget {
                                       Get.to(LoginCard());
                                     },
                                     style: ElevatedButton.styleFrom(),
-                                    child: const Text("Login"))
+                                    child: const Text("Login"))*/
                               ],
                             )
                           ],
-                        ))
-                  ],
-                ))));
+                        )))
+              ],
+            ))));
   }
 }
