@@ -256,13 +256,13 @@ class SignUpCard extends StatelessWidget {
                                   http
                                       .post(
                                         Uri.parse(
-                                            'https://jsonplaceholder.typicode.com/api/register'),
+                                            'http://156.253.5.198/api/register'),
                                         headers: {
                                           HttpHeaders.contentTypeHeader:
                                               'application/json; charset=UTF-8',
                                         },
                                         body: jsonEncode({
-                                          'fullname': signupFullname.text,
+                                          'name': signupFullname.text,
                                           'email': signupEmail.text,
                                           'phone': signupPhone.text,
                                           'password': signupPassword.text,
