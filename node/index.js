@@ -50,7 +50,7 @@ require("node:http").createServer({}, (request, response) => {
         response.end();
         try {
           const data = JSON.parse(body);
-          if (typeof data.name === "string" && /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(data.email) && /^(\+98|0)?9\d{9}$/.test(data.phone) && typeof data.password === "string") {
+          if (typeof data.name === "string" && /^(?=.*[a-zA-Z])(?=.*\d)(?=.*\w).{8,}$/.test(data.email) && /^09\d{9}$/.test(data.phone) && typeof data.password === "string") {
             const statement = database.prepare("INSERT INTO `users` (`name`, `email`, `phone`, `password`) VALUES (?, ?, ?, ?)");
             statement.run([data.name, data.email, data.phone, data.password], (error) => {
               if (error) {

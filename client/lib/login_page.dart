@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:login_totarial/og.dart';
 import 'package:login_totarial/sign_up.dart';
-// import 'package:fluttertoast/fluttertoast.dart';
+import 'package:toastification/toastification.dart';
 import 'package:flutter/gestures.dart';
 
 String register = "register";
@@ -42,155 +42,230 @@ class LoginCard extends StatelessWidget {
                         child: Form(
                             key: _logincardKey,
                             child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                TextFormField(
-                                  controller: loginUsername,
-                                  decoration: InputDecoration(
-                                    label: const Text('Email / Phone Number'),
-                                    hintText: 'Enter Your Email / Phone Number',
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide:
-                                          const BorderSide(color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Colors.black,
-                                        width: 2,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Colors.red,
-                                        width: 2,
-                                      ),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                TextFormField(
-                                  controller: loginPassword,
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                    label: const Text('password'),
-                                    hintText: 'Enter Your Password',
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide:
-                                          const BorderSide(color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Colors.black,
-                                        width: 2,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Colors.red,
-                                        width: 2,
-                                      ),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 22,
-                                ),
-                                SizedBox(
-                                  height: 50,
-                                  width: double.infinity,
-                                  child: ElevatedButton(
-                                    onPressed: () async {
-                                      http
-                                          .post(
-                                            Uri.parse(
-                                                'https://jsonplaceholder.typicode.com/api/login'),
-                                            headers: {
-                                              HttpHeaders.contentTypeHeader:
-                                                  'application/json; charset=UTF-8',
-                                            },
-                                            body: jsonEncode({
-                                              'email': loginUsername.text,
-                                              'password': loginPassword.text,
-                                            }),
-                                          )
-                                          .then((value) => {
-                                                if (value.statusCode != null)
-                                                  {Get.to(const OgCard())}
-                                                else
-                                                  {}
-                                              })
-                                          .onError((error, stackTrace) => {
-
-                                          });
-                                      Get.to(OgCard());
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  TextFormField(
+                                    validator: (value) {
+                                      RegExp emailRegex = RegExp(
+                                          r'^[a-zA-Z0-9._%+-]+@gmail\.com$');
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please Enter Your Email';
+                                      } else if (!emailRegex.hasMatch(value)) {
+                                        return 'Wrong Email';
+                                      }
+                                      return null;
                                     },
-                                    style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12)),
-                                        foregroundColor: Colors.black,
-                                        backgroundColor:
-                                            const Color(0xFFFFC107),
-                                        textStyle: const TextStyle(
-                                          fontSize: 20,
-                                        )),
-                                    child: const Text("login"),
+                                    controller: loginUsername,
+                                    decoration: InputDecoration(
+                                      focusedErrorBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          borderSide: const BorderSide(
+                                            color: Colors.red,
+                                            width: 1,
+                                          )),
+                                      label: const Text('Email '),
+                                      hintText: 'Enter Your Email',
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                            color: Colors.grey),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                          color: Colors.black,
+                                          width: 2,
+                                        ),
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      errorBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                          color: Colors.red,
+                                          width: 2,
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                SizedBox(
-                                  height: 65,
-                                  width: double.infinity,
-                                  child: ElevatedButton(
-                                      onPressed: () {},
+                                  const SizedBox(height: 10),
+                                  TextFormField(
+                                    validator: (value) {
+                                      RegExp Password2Regex = RegExp(
+                                          r'^(?=.*[a-zA-Z])(?=.*\d)(?=.*\w).{8,}$');
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please Enter Your Password';
+                                      } else if (!Password2Regex.hasMatch(
+                                          value)) {
+                                        return "Your Password must contian character and numbers and words";
+                                      }
+                                      return null;
+                                    },
+                                    controller: loginPassword,
+                                    obscureText: true,
+                                    decoration: InputDecoration(
+                                      focusedErrorBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          borderSide: const BorderSide(
+                                            color: Colors.red,
+                                            width: 1,
+                                          )),
+                                      label: const Text('password'),
+                                      hintText: 'Enter Your Password',
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                            color: Colors.grey),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                          color: Colors.black,
+                                          width: 2,
+                                        ),
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      errorBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                          color: Colors.red,
+                                          width: 2,
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 22,
+                                  ),
+                                  SizedBox(
+                                    height: 50,
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      onPressed: () async {
+                                        if (_logincardKey.currentState!
+                                            .validate()) {
+                                          toastification.show(
+                                              context: context,
+                                              title: const Text(
+                                                  "Registering information"),
+                                              autoCloseDuration:
+                                                  const Duration(seconds: 3));
+                                        } else {}
+                                        http
+                                            .post(
+                                              Uri.parse(
+                                                  'https://jsonplaceholder.typicode.com/api/login'),
+                                              headers: {
+                                                HttpHeaders.contentTypeHeader:
+                                                    'application/json; charset=UTF-8',
+                                              },
+                                              body: jsonEncode({
+                                                'email': loginUsername.text,
+                                                'password': loginPassword.text,
+                                              }),
+                                            )
+                                            .then((value) => {
+                                                  if (value.statusCode == 200)
+                                                    {
+                                                      Get.to(const OgCard()),
+                                                      toastification.show(
+                                                          backgroundColor:
+                                                              Colors.green,
+                                                          context: context,
+                                                          title: const Text(
+                                                              "Login up successfully"),
+                                                          autoCloseDuration:
+                                                              const Duration(
+                                                                  seconds: 3))
+                                                    }
+                                                  else
+                                                    {
+                                                      toastification.show(
+                                                          backgroundColor:
+                                                              Colors.red,
+                                                          context: context,
+                                                          title: const Text(
+                                                              "The information is invalid"),
+                                                          autoCloseDuration:
+                                                              const Duration(
+                                                                  seconds: 3))
+                                                    }
+                                                })
+                                            .onError((error, stackTrace) => {});
+                                        //Get.to(OgCard());
+                                      },
                                       style: ElevatedButton.styleFrom(
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(12)),
                                           foregroundColor: Colors.black,
-                                          backgroundColor: const Color.fromARGB(
-                                              255, 255, 255, 255),
+                                          backgroundColor:
+                                              const Color(0xFFFFC107),
                                           textStyle: const TextStyle(
                                             fontSize: 20,
                                           )),
-                                      child:
-                                          const Text("I forgot my password")),
-                                ),
-                                const SizedBox(
-                                  height: 33,
-                                ),
-                                Row(
-                                  children: [
-                                    const Text(
-                                      "Don't have an account ?",
-                                      style: TextStyle(
-                                        decoration: TextDecoration.none,
-                                        color: Colors.black,
-                                        fontSize: 14,
+                                      child: const Text("login"),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  SizedBox(
+                                    height: 65,
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                        onPressed: () {},
+                                        style: ElevatedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(12)),
+                                            foregroundColor: Colors.black,
+                                            backgroundColor:
+                                                const Color.fromARGB(
+                                                    255, 255, 255, 255),
+                                            textStyle: const TextStyle(
+                                              fontSize: 20,
+                                            )),
+                                        child:
+                                            const Text("I forgot my password")),
+                                  ),
+                                  const SizedBox(
+                                    height: 33,
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Text(
+                                        "Don't have an account ?",
+                                        style: TextStyle(
+                                          decoration: TextDecoration.none,
+                                          color: Colors.black,
+                                          fontSize: 14,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      width: 35,
-                                    ),
-                                    ElevatedButton(
-                                        onPressed: () {
-                                          Get.to(SignUpCard());
-                                        },
-                                        style: ElevatedButton.styleFrom(),
-                                        child: const Text("Sign Up"))
-                                  ],
-                                )
-                              ],
-                            ))
-                      ],
-                    )))));
+                                      const SizedBox(
+                                        width: 35,
+                                      ),
+                                      RichText(
+                                          text: TextSpan(
+                                        children: [
+                                          const TextSpan(
+                                            text: "By  ",
+                                          ),
+                                          TextSpan(
+                                            text: "Sign Up",
+                                            style: const TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 0, 0, 0),
+                                                fontSize: 22),
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap =
+                                                  () => Get.to(SignUpCard()),
+                                          ),
+                                        ],
+                                      ))
+                                    ],
+                                  )
+                                ])))
+                  ],
+                )))));
   }
 }

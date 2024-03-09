@@ -23,10 +23,9 @@ String register = "register";
 // class _SignUpCardState extends State<SignUpCard>{
 //   @override
 //   Widget build(BuildContext context) {
-//     return 
+//     return
 //   }
 // }
-
 
 class SignUpCard extends StatelessWidget {
   SignUpCard({super.key});
@@ -109,10 +108,11 @@ class SignUpCard extends StatelessWidget {
                             const SizedBox(height: 10),
                             TextFormField(
                               validator: (value) {
-                               RegExp emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@gmail\.com$');
+                                RegExp emailRegex =
+                                    RegExp(r'^[a-zA-Z0-9._%+-]+@gmail\.com$');
                                 if (value == null || value.isEmpty) {
                                   return 'Please Enter Your Email';
-                                }else if(!emailRegex.hasMatch(value)){
+                                } else if (!emailRegex.hasMatch(value)) {
                                   return 'Wrong Email';
                                 }
                                 return null;
@@ -151,10 +151,10 @@ class SignUpCard extends StatelessWidget {
                             const SizedBox(height: 10),
                             TextFormField(
                               validator: (value) {
-                                 RegExp PhonenumberRegex = RegExp(r'^09\d{9}$');
+                                RegExp PhonenumberRegex = RegExp(r'^09\d{9}$');
                                 if (value == null || value.isEmpty) {
                                   return 'Please Enter Your Phone Number';
-                                } else if (!PhonenumberRegex.hasMatch(value)){
+                                } else if (!PhonenumberRegex.hasMatch(value)) {
                                   return "Your Phone number sholud start with 09 and have 11 number";
                                 }
                                 return null;
@@ -193,11 +193,12 @@ class SignUpCard extends StatelessWidget {
                             const SizedBox(height: 10),
                             TextFormField(
                               validator: (value) {
-                                RegExp PasswordRegex = RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)(?=.*\w).{8,}$');
+                                RegExp PasswordRegex = RegExp(
+                                    r'^(?=.*[a-zA-Z])(?=.*\d)(?=.*\w).{8,}$');
                                 if (value == null || value.isEmpty) {
                                   return 'Please Enter Your Password';
-                                } else if (!PasswordRegex.hasMatch(value)){
-                                    return"Your Password must contian character and numbers and words";
+                                } else if (!PasswordRegex.hasMatch(value)) {
+                                  return "Your Password must contian character and numbers and words";
                                 }
                                 return null;
                               },
@@ -269,13 +270,30 @@ class SignUpCard extends StatelessWidget {
                                         }),
                                       )
                                       .then((value) => {
-                                        
-                                            if (value.statusCode != null)
+                                            if (value.statusCode == 200)
                                               {
                                                 //email and password is ok
+                                                toastification.show(
+                                                   backgroundColor:
+                                                            Colors.green,
+                                                    context: context,
+                                                    title: const Text(
+                                                        "Signed up successfully"),
+                                                    autoCloseDuration:
+                                                        const Duration(
+                                                            seconds: 3))
                                               }
                                             else
                                               {
+                                                 toastification.show(
+                                                   backgroundColor:
+                                                            Colors.red,
+                                                    context: context,
+                                                    title: const Text(
+                                                        "The information is invalid"),
+                                                    autoCloseDuration:
+                                                        const Duration(
+                                                            seconds: 3))
                                                 //email and password is not ok
                                               }
                                           })
@@ -309,7 +327,7 @@ class SignUpCard extends StatelessWidget {
                                 const SizedBox(
                                   width: 55,
                                 ),
-                                
+
                                 // GestureDetector(
                                 //   child: Text('C'),
                                 //   onTap: () {
@@ -321,40 +339,37 @@ class SignUpCard extends StatelessWidget {
                                   text: TextSpan(
                                     children: [
                                       const TextSpan(
-                                        text:
-                                            "By  ",
+                                        text: "By  ",
                                       ),
-                                     TextSpan(
+                                      TextSpan(
                                         text: "Login",
                                         style: const TextStyle(
-                                          color: Color.fromARGB(255, 0, 0, 0),
-                                          fontSize: 22
-                                        ),
-                                        recognizer:  TapGestureRecognizer()
-                                          ..onTap =
-                                              () => Get.to(LoginCard()),
+                                            color: Color.fromARGB(255, 0, 0, 0),
+                                            fontSize: 22),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () => Get.to(LoginCard()),
                                       ),
-                                    //  const TextSpan(text: "and our "),
-                                    //   TextSpan(
-                                    //     text: "Terms and Conditions ",
-                                    //     style: const TextStyle(
-                                    //       color: Colors.lightGreen,
-                                    //     ),
-                                    //     recognizer:  TapGestureRecognizer()
-                                    //       ..onTap = () =>
-                                    //           print("Terms and Conditions"),
-                                    //   ),
-                                    //   const TextSpan(text: "and "),
-                                    //   TextSpan(
-                                    //     text: "Cookie Statement",
-                                    //     style: const TextStyle(
-                                    //       color: Colors.lightGreen,
-                                    //     ),
-                                    //     recognizer:  TapGestureRecognizer()
-                                    //       ..onTap =
-                                    //           () => print("Cookie Statement"),
-                                    //   ),
-                                    //   const TextSpan(text: "."),
+                                      //  const TextSpan(text: "and our "),
+                                      //   TextSpan(
+                                      //     text: "Terms and Conditions ",
+                                      //     style: const TextStyle(
+                                      //       color: Colors.lightGreen,
+                                      //     ),
+                                      //     recognizer:  TapGestureRecognizer()
+                                      //       ..onTap = () =>
+                                      //           print("Terms and Conditions"),
+                                      //   ),
+                                      //   const TextSpan(text: "and "),
+                                      //   TextSpan(
+                                      //     text: "Cookie Statement",
+                                      //     style: const TextStyle(
+                                      //       color: Colors.lightGreen,
+                                      //     ),
+                                      //     recognizer:  TapGestureRecognizer()
+                                      //       ..onTap =
+                                      //           () => print("Cookie Statement"),
+                                      //   ),
+                                      //   const TextSpan(text: "."),
                                     ],
                                   ),
                                 ),
