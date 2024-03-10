@@ -243,21 +243,10 @@ class SignUpCard extends StatelessWidget {
                               child: ElevatedButton(
                                 onPressed: () {
                                   if (_signupcardKey.currentState!.validate()) {
-                                    //Get.to(LoginCard());
-                                    toastification.show(
-                                        context: context,
-                                        title: const Text(
-                                            "Registering information"),
-                                        autoCloseDuration:
-                                            const Duration(seconds: 3));
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content: Text("wait for login")));
-                                  } else {}
                                   http
                                       .post(
                                         Uri.parse(
-                                            'http://156.253.5.198/api/register'),
+                                            'http://127.0.0.1/api/register'),
                                         headers: {
                                           HttpHeaders.contentTypeHeader:
                                               'application/json; charset=UTF-8',
@@ -281,10 +270,25 @@ class SignUpCard extends StatelessWidget {
                                                         "Signed up successfully"),
                                                     autoCloseDuration:
                                                         const Duration(
+                                                            seconds: 3)),
+                                                Get.to(LoginCard())
+                                              }
+                                            else if (value.statusCode == 409)
+                                              {
+                                                //email and password is not ok
+                                                 toastification.show(
+                                                   backgroundColor:
+                                                            Colors.red,
+                                                    context: context,
+                                                    title: const Text(
+                                                        "Account already exists"),
+                                                    autoCloseDuration:
+                                                        const Duration(
                                                             seconds: 3))
                                               }
                                             else
                                               {
+                                                //email and password is not ok
                                                  toastification.show(
                                                    backgroundColor:
                                                             Colors.red,
@@ -294,10 +298,10 @@ class SignUpCard extends StatelessWidget {
                                                     autoCloseDuration:
                                                         const Duration(
                                                             seconds: 3))
-                                                //email and password is not ok
                                               }
                                           })
                                       .onError((error, stackTrace) => {});
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(

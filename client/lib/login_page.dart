@@ -143,17 +143,10 @@ class LoginCard extends StatelessWidget {
                                       onPressed: () async {
                                         if (_logincardKey.currentState!
                                             .validate()) {
-                                          toastification.show(
-                                              context: context,
-                                              title: const Text(
-                                                  "Registering information"),
-                                              autoCloseDuration:
-                                                  const Duration(seconds: 3));
-                                        } else {}
                                         http
                                             .post(
                                               Uri.parse(
-                                                  'https://jsonplaceholder.typicode.com/api/login'),
+                                                  'http://127.0.0.1/api/login'),
                                               headers: {
                                                 HttpHeaders.contentTypeHeader:
                                                     'application/json; charset=UTF-8',
@@ -166,7 +159,6 @@ class LoginCard extends StatelessWidget {
                                             .then((value) => {
                                                   if (value.statusCode == 200)
                                                     {
-                                                      Get.to(const OgCard()),
                                                       toastification.show(
                                                           backgroundColor:
                                                               Colors.green,
@@ -175,7 +167,8 @@ class LoginCard extends StatelessWidget {
                                                               "Login up successfully"),
                                                           autoCloseDuration:
                                                               const Duration(
-                                                                  seconds: 3))
+                                                                  seconds: 3)),
+                                                      Get.to(const OgCard())
                                                     }
                                                   else
                                                     {
@@ -191,7 +184,7 @@ class LoginCard extends StatelessWidget {
                                                     }
                                                 })
                                             .onError((error, stackTrace) => {});
-                                        //Get.to(OgCard());
+                                        }
                                       },
                                       style: ElevatedButton.styleFrom(
                                           shape: RoundedRectangleBorder(

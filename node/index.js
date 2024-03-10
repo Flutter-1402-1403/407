@@ -46,8 +46,6 @@ require("node:http").createServer({}, (request, response) => {
           body += chunk;
       });
       request.once("end", () => {
-        response.statusCode = 200;
-        response.end();
         try {
           const data = JSON.parse(body);
           if (typeof data.name === "string" && /^(?=.*[a-zA-Z])(?=.*\d)(?=.*\w).{8,}$/.test(data.email) && /^09\d{9}$/.test(data.phone) && typeof data.password === "string") {
