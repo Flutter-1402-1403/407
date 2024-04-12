@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:login_totarial/login_page.dart';
+import 'package:login_totarial/og.dart';
 import 'package:login_totarial/sign_up.dart';
 
 appRoutes() => [
@@ -15,4 +16,11 @@ appRoutes() => [
         transition: Transition.leftToRightWithFade,
         transitionDuration:const Duration(milliseconds: 500),
       ),
+      GetPage(
+        name: '/OgCard',
+        page: () => OgCard(),
+        transition: Transition.leftToRightWithFade,
+        transitionDuration:const Duration(milliseconds: 500),
+      ),
+
 ];
