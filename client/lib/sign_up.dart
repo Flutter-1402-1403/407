@@ -97,7 +97,7 @@ class SignUpCard extends StatelessWidget {
                       TextFormField(
                         validator: (value) {
                           RegExp emailRegex =
-                              RegExp(r'^[a-zA-Z0-9._%+-]+@gmail\.com$');
+                              RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
                           if (value == null || value.isEmpty) {
                             return 'Please Enter Your Email';
                           } else if (!emailRegex.hasMatch(value)) {
@@ -138,7 +138,7 @@ class SignUpCard extends StatelessWidget {
                       const SizedBox(height: 10),
                       TextFormField(
                         validator: (value) {
-                          RegExp PhonenumberRegex = RegExp(r'^09\d{9}$');
+                          RegExp PhonenumberRegex = RegExp(r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
                           if (value == null || value.isEmpty) {
                             return 'Please Enter Your Phone Number';
                           } else if (!PhonenumberRegex.hasMatch(value)) {
@@ -180,7 +180,7 @@ class SignUpCard extends StatelessWidget {
                       TextFormField(
                         validator: (value) {
                           RegExp PasswordRegex =
-                              RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)(?=.*\w).{8,}$');
+                              RegExp(r'^[\s\S]{8,}$');
                           if (value == null || value.isEmpty) {
                             return 'Please Enter Your Password';
                           } else if (!PasswordRegex.hasMatch(value)) {
