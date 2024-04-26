@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:login_totarial/og.dart';
-import 'package:login_totarial/sign_up.dart';
+import 'package:login_totarial/homepage/og.dart';
+import 'package:login_totarial/ass/login/sign_up.dart';
 import 'package:toastification/toastification.dart';
 import 'package:flutter/gestures.dart';
 
@@ -28,21 +28,21 @@ class LoginCard extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           child: IntrinsicHeight(
             child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
+             // mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                const SizedBox(height: 60),
-                Image.asset("assets/imdb.png"),
-                const SizedBox(height: 100.1),
+                //const SizedBox(height: 0),
+                Image.asset("assets/imdb1.png"),
+                const SizedBox(height: 5),
                 Container(
                   color: Colors.white,
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 32, vertical: 44),
-                  height: 500,
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 54),
+                  height: 770,
                   child: Form(
                     key: _logincardKey,
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                      //mainAxisSize: MainAxisSize.min,
                       children: [
                         TextFormField(
                           validator: (value) {
@@ -136,53 +136,54 @@ class LoginCard extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () async {
-                              if (_logincardKey.currentState!.validate()) {
-                                http
-                                    .post(
-                                      Uri.parse(
-                                          'http://192.168.43.154/api/login'),
-                                      headers: {
-                                        HttpHeaders.contentTypeHeader:
-                                            'application/json; charset=UTF-8',
-                                      },
-                                      body: jsonEncode({
-                                        'username': loginUsername.text,
-                                        'password': loginPassword.text,
-                                      }),
-                                    )
-                                    .then((value) => {
-                                          if (value.statusCode == 200)
-                                            {
-                                              toastification.show(
-                                                  backgroundColor: Colors.green,
-                                                  context: context,
-                                                  title: const Text(
-                                                      "Login up successfully"),
-                                                  autoCloseDuration:
-                                                      const Duration(
-                                                          seconds: 3)),
-                                              Get.to(const OgCard())
-                                            }
-                                          else
-                                            {
-                                              toastification.show(
-                                                  backgroundColor: Colors.red,
-                                                  context: context,
-                                                  title: const Text(
-                                                      "The information is invalid"),
-                                                  autoCloseDuration:
-                                                      const Duration(
-                                                          seconds: 3))
-                                            }
-                                        })
-                                    .onError((error, stackTrace) => {});
-                              }
+                              // if (_logincardKey.currentState!.validate()) {
+                              //   http
+                              //       .post(
+                              //         Uri.parse(
+                              //             'http://192.168.43.154/api/login'),
+                              //         headers: {
+                              //           HttpHeaders.contentTypeHeader:
+                              //               'application/json; charset=UTF-8',
+                              //         },
+                              //         body: jsonEncode({
+                              //           'username': loginUsername.text,
+                              //           'password': loginPassword.text,
+                              //         }),
+                              //       )
+                              //       .then((value) => {
+                              //             if (value.statusCode == 200)
+                              //               {
+                              //                 toastification.show(
+                              //                     backgroundColor: Colors.green,
+                              //                     context: context,
+                              //                     title: const Text(
+                              //                         "Login up successfully"),
+                              //                     autoCloseDuration:
+                              //                         const Duration(
+                              //                             seconds: 3)),
+                              //                 Get.to(const OgCard())
+                              //               }
+                              //             else
+                              //               {
+                              //                 toastification.show(
+                              //                     backgroundColor: Colors.red,
+                              //                     context: context,
+                              //                     title: const Text(
+                              //                         "The information is invalid"),
+                              //                     autoCloseDuration:
+                              //                         const Duration(
+                              //                             seconds: 3))
+                              //               }
+                              //           })
+                              //       .onError((error, stackTrace) => {});
+                              // }
+                              Get.to(const OgCard());
                             },
                             style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12)),
                                 foregroundColor: Colors.black,
-                                backgroundColor: const Color(0xFFFFC107),
+                                backgroundColor: const Color(0xFFF6C700),
                                 textStyle: const TextStyle(
                                   fontSize: 20,
                                 )),
@@ -196,17 +197,19 @@ class LoginCard extends StatelessWidget {
                           height: 65,
                           width: double.infinity,
                           child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Get.to(SignUpCard());
+                              },
                               style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12)),
-                                  foregroundColor: Colors.black,
+                                  foregroundColor: Colors.white,
                                   backgroundColor:
-                                      const Color.fromARGB(255, 255, 255, 255),
+                                      Color.fromARGB(255, 0, 0, 0),
                                   textStyle: const TextStyle(
                                     fontSize: 20,
                                   )),
-                              child: const Text("I forgot my password")),
+                              child: const Text("Create account")),
                         ),
                         const SizedBox(
                           height: 33,
@@ -214,11 +217,11 @@ class LoginCard extends StatelessWidget {
                         Row(
                           children: [
                             const Text(
-                              "Don't have an account ?",
+                              "Conditions of Use",
                               style: TextStyle(
                                 decoration: TextDecoration.none,
-                                color: Colors.black,
-                                fontSize: 14,fontFamily: "Roboto",fontWeight: FontWeight.bold
+                               color: Color.fromARGB(255, 99, 99, 99),
+                                fontSize: 14,fontFamily: "Roboto",fontWeight: FontWeight.normal
                               ),
                             ),
                             const SizedBox(
@@ -231,12 +234,12 @@ class LoginCard extends StatelessWidget {
                                     text: "By  ",
                                   ),
                                   TextSpan(
-                                    text: "Sign Up",
+                                    text: "Privacy Notice",
                                     style: const TextStyle(
-                                        color: Color.fromARGB(255, 0, 0, 0),
-                                        fontSize: 22,fontFamily: "Roboto",fontWeight: FontWeight.bold),
+                                        color: Color.fromARGB(255, 99, 99, 99),
+                                        fontSize: 14,fontFamily: "Roboto",fontWeight: FontWeight.normal),
                                     recognizer: TapGestureRecognizer()
-                                      ..onTap = () => Get.to(SignUpCard()),
+                                      ..onTap = () => Get.to(SignUpCard())
                                   ),
                                 ],
                               ),

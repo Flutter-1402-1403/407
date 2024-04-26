@@ -4,8 +4,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:login_totarial/login_page.dart';
-import 'package:login_totarial/og.dart';
+import 'package:login_totarial/ass/login/login_page.dart';
+import 'package:login_totarial/homepage/og.dart';
 import 'package:toastification/toastification.dart';
 import 'package:flutter/gestures.dart';
 
