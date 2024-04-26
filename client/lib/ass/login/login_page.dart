@@ -3,10 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:login_totarial/ass/login/PrivacyNotice.dart';
+import 'package:login_totarial/ass/login/ConditionsofUse.dart';
 import 'package:login_totarial/homepage/og.dart';
 import 'package:login_totarial/ass/login/sign_up.dart';
 import 'package:toastification/toastification.dart';
 import 'package:flutter/gestures.dart';
+import 'package:login_totarial/ass/login/ForgetPassword.dart';
 
 String register = "register";
 
@@ -24,26 +27,33 @@ class LoginCard extends StatelessWidget {
       child: ConstrainedBox(
         constraints: const BoxConstraints(),
         child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
+          //height: MediaQuery.of(context).size.height,
+          //width: MediaQuery.of(context).size.width,
           child: IntrinsicHeight(
             child: Column(
-             // mainAxisSize: MainAxisSize.max,
+              // mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                //const SizedBox(height: 0),
                 Image.asset("assets/imdb1.png"),
-                const SizedBox(height: 5),
                 Container(
                   color: Colors.white,
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 54),
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
                   height: 770,
                   child: Form(
                     key: _logincardKey,
                     child: Column(
                       //mainAxisSize: MainAxisSize.min,
-                      children: [
+                      children: [const Align(alignment: Alignment.bottomCenter,child:Text(
+                          "Sign in",
+                          style: TextStyle(color: Colors.black,
+                              fontSize: 25,
+                              fontFamily: "Roboto",
+                              fontWeight: FontWeight.normal,
+                              decoration: TextDecoration.none,shadows: lowModeShadow ),
+                        ),),
+                        
+                         const SizedBox(height: 30),
                         TextFormField(
                           validator: (value) {
                             RegExp emailRegex =
@@ -85,7 +95,7 @@ class LoginCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 20),
                         TextFormField(
                           validator: (value) {
                             RegExp Password2Regex = RegExp(
@@ -128,8 +138,30 @@ class LoginCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          height: 22,
+                           const SizedBox(height: 15),
+                        Row(children: [ 
+                           const SizedBox(
+                              width: 255),
+                           RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                      text: "Forget Password?",
+                                      style: const TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 99, 99, 99),
+                                          fontSize: 14,
+                                          fontFamily: "Roboto",
+                                          fontWeight: FontWeight.normal),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () =>
+                                            Get.to(const ForgetPassword())),
+                                ],
+                              ),
+                            ),
+                        ],),
+                         const SizedBox(
+                          height: 50,
                         ),
                         SizedBox(
                           height: 50,
@@ -183,18 +215,20 @@ class LoginCard extends StatelessWidget {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12)),
                                 foregroundColor: Colors.black,
-                                backgroundColor: const Color(0xFFF6C700),
+                                backgroundColor: const Color(0xFFF6B100),
                                 textStyle: const TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 17.5,
+                                  fontFamily: "Roboto",
+                                  fontWeight: FontWeight.w400,
                                 )),
-                            child: const Text("login"),
+                            child: const Text("Login"),
                           ),
                         ),
                         const SizedBox(
                           height: 20,
                         ),
                         SizedBox(
-                          height: 65,
+                          height: 50,
                           width: double.infinity,
                           child: ElevatedButton(
                               onPressed: () {
@@ -204,43 +238,52 @@ class LoginCard extends StatelessWidget {
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12)),
                                   foregroundColor: Colors.white,
-                                  backgroundColor:
-                                      Color.fromARGB(255, 0, 0, 0),
+                                  backgroundColor: Color.fromARGB(255, 0, 0, 0),
                                   textStyle: const TextStyle(
-                                    fontSize: 20,
-                                  )),
-                              child: const Text("Create account")),
+                                      fontSize: 17.5,
+                                      fontFamily: "Roboto",
+                                      fontWeight: FontWeight.w400)),
+                              child: const Text("Create Account")),
                         ),
                         const SizedBox(
                           height: 33,
                         ),
                         Row(
                           children: [
-                            const Text(
-                              "Conditions of Use",
-                              style: TextStyle(
-                                decoration: TextDecoration.none,
-                               color: Color.fromARGB(255, 99, 99, 99),
-                                fontSize: 14,fontFamily: "Roboto",fontWeight: FontWeight.normal
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                      text: "Conditions of Use",
+                                      style: const TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 99, 99, 99),
+                                          fontSize: 14,
+                                          fontFamily: "Roboto",
+                                          fontWeight: FontWeight.normal),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () =>
+                                            Get.to(const ConditionsofUse())),
+                                ],
                               ),
                             ),
                             const SizedBox(
-                              width: 35,
+                              width: 169,
                             ),
                             RichText(
                               text: TextSpan(
                                 children: [
-                                  const TextSpan(
-                                    text: "By  ",
-                                  ),
                                   TextSpan(
-                                    text: "Privacy Notice",
-                                    style: const TextStyle(
-                                        color: Color.fromARGB(255, 99, 99, 99),
-                                        fontSize: 14,fontFamily: "Roboto",fontWeight: FontWeight.normal),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () => Get.to(SignUpCard())
-                                  ),
+                                      text: "Privacy Notice",
+                                      style: const TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 99, 99, 99),
+                                          fontSize: 14,
+                                          fontFamily: "Roboto",
+                                          fontWeight: FontWeight.normal),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () =>
+                                            Get.to(const PrivacyNotice())),
                                 ],
                               ),
                             ),
