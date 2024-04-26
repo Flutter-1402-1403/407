@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:login_totarial/ass/login/login_page.dart';
 import 'package:login_totarial/homepage/og.dart';
 import 'package:login_totarial/ass/login/sign_up.dart';
+import 'package:login_totarial/ass/login/PrivacyNotice.dart';
 
 appRoutes() => [
       GetPage(
@@ -13,7 +14,7 @@ appRoutes() => [
       GetPage(
         name: '/SignUp',
         page: () => SignUpCard(),
-        transition: Transition.leftToRightWithFade,
+        transition: Transition.fade,
         transitionDuration:const Duration(milliseconds: 500),
       ),
       GetPage(
@@ -23,9 +24,9 @@ appRoutes() => [
         transitionDuration:const Duration(milliseconds: 500),
       ),
       GetPage(
-        name: '/OgCard',
-        page: () => OgCard(),
-        transition: Transition.leftToRightWithFade,
+        name: '/PrivacyNotice',
+        page: () => PrivacyNotice(),
+        transition: Transition.fade,
         transitionDuration:const Duration(milliseconds: 500),
       ),
 

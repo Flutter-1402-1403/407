@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class HomePageCard extends StatelessWidget {
-  const HomePageCard({super.key});
+class PrivacyNotice extends StatelessWidget {
+  const PrivacyNotice ({super.key});
 
   @override
   Widget build(BuildContext context) {
