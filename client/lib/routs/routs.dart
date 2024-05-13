@@ -1,15 +1,15 @@
 import 'package:get/get.dart';
-import 'package:login_totarial/ass/login/login_page.dart';
+import 'package:login_totarial/login/login.dart';
 import 'package:login_totarial/homepage/og.dart';
-import 'package:login_totarial/ass/login/sign_up.dart';
-import 'package:login_totarial/ass/login/PrivacyNotice.dart';
-import 'package:login_totarial/ass/login/ConditionsofUse.dart';
-import 'package:login_totarial/ass/login/ForgetPassword.dart';
+import 'package:login_totarial/login/sign_up.dart';
+import 'package:login_totarial/login/privacy_notice.dart';
+import 'package:login_totarial/login/condition_of_use.dart';
+import 'package:login_totarial/login/forgot_password.dart';
 
 appRoutes() => [
       GetPage(
         name: '/Login',
-        page: () => LoginCard(),
+        page: () => Login(),
         transition: Transition.circularReveal,
         transitionDuration: const Duration(milliseconds: 500),
       ),
@@ -31,13 +31,13 @@ appRoutes() => [
         transition: Transition.fade,
         transitionDuration:const Duration(milliseconds: 500),
       ), GetPage(
-        name: '/ConditionsofUse',
-        page: () => ConditionsofUse(),
+        name: '/ConditionOfUse',
+        page: () => ConditionOfUse(),
         transition: Transition.fade,
         transitionDuration:const Duration(milliseconds: 500),
       ), GetPage(
-        name: '/ForgetPassword',
-        page: () => ForgetPassword(),
+        name: '/ForgotPassword',
+        page: () => ForgotPassword(),
         transition: Transition.fade,
         transitionDuration:const Duration(milliseconds: 500),
       ),

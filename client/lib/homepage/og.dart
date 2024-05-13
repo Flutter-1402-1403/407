@@ -2,25 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:login_totarial/ass/login/PrivacyNotice.dart';
-
+import 'package:login_totarial/login/privacy_notice.dart';
 import 'package:flutter/material.dart';
-
-/// Flutter code sample for [NavigationBar].
-
-void main() => runApp(const NavigationBarApp());
-
-class NavigationBarApp extends StatelessWidget {
-  const NavigationBarApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(useMaterial3: true),
-      home: const OgCard(),
-    );
-  }
-}
 
 class OgCard extends StatefulWidget {
   const OgCard({super.key});
@@ -36,23 +19,6 @@ class _OgCardState extends State<OgCard> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-          title: Row(
-            children: <Widget>[
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Image.asset("assets/imdb1.png"),
-              )
-            ],
-          ),
-          actions: const <Widget>[
-            // add the icon to this list
-            Icon(
-              Icons.notifications,
-              color: Colors.black,
-            ),
-          ],
-          backgroundColor: const Color(0xFFF5C418)),
       bottomNavigationBar: NavigationBar(
         backgroundColor: Colors.black,
         onDestinationSelected: (int index) {
@@ -93,7 +59,7 @@ class _OgCardState extends State<OgCard> {
           child: Column(
             children: [
               SizedBox(
-                child: Image.asset("assets/shogun.jpg"),
+                child: Image.asset("assets/images/shogun.jpg"),
               ),
               const SizedBox(
                 height: 5,
@@ -106,9 +72,10 @@ class _OgCardState extends State<OgCard> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     const SizedBox(
-                      width: 14,),
+                      width: 14,
+                    ),
                     Image.asset(
-                      "assets/intro.png",
+                      "assets/images/intro.png",
                     ),
                     const SizedBox(
                       width: 3,
@@ -132,10 +99,12 @@ class _OgCardState extends State<OgCard> {
                   ],
                 ),
               ),
-                                  const SizedBox(
-                      width: 14,),
+              const SizedBox(
+                width: 14,
+              ),
               Container(
-                margin: const EdgeInsets.symmetric(vertical: 13,horizontal:17),
+                margin:
+                    const EdgeInsets.symmetric(vertical: 13, horizontal: 17),
                 height: 184,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
@@ -144,7 +113,7 @@ class _OgCardState extends State<OgCard> {
                       child: Column(
                         children: <Widget>[
                           Image.asset(
-                            'assets/unsplash0.png',
+                            'assets/images/unsplash0.png',
                           ),
                           const Text(
                             'Poor thing',
@@ -161,7 +130,7 @@ class _OgCardState extends State<OgCard> {
                     Expanded(
                       child: Column(
                         children: <Widget>[
-                          Image.asset('assets/unsplash1.png'),
+                          Image.asset('assets/images/unsplash1.png'),
                           const Text(
                             'Oppenheimer',
                             style: TextStyle(
@@ -177,7 +146,7 @@ class _OgCardState extends State<OgCard> {
                     Expanded(
                       child: Column(
                         children: <Widget>[
-                          Image.asset('assets/unsplash8.png'),
+                          Image.asset('assets/images/unsplash8.png'),
                           const Text(
                             'Barbie',
                             style: TextStyle(
@@ -193,7 +162,7 @@ class _OgCardState extends State<OgCard> {
                     Expanded(
                       child: Column(
                         children: <Widget>[
-                          Image.asset('assets/unsplash2.png'),
+                          Image.asset('assets/images/unsplash2.png'),
                           const Text(
                             'Dune:  part two',
                             style: TextStyle(
@@ -209,7 +178,7 @@ class _OgCardState extends State<OgCard> {
                     Expanded(
                       child: Column(
                         children: <Widget>[
-                          Image.asset('assets/unsplash3.png'),
+                          Image.asset('assets/images/unsplash3.png'),
                           const Text(
                             'Shogun',
                             style: TextStyle(
@@ -225,7 +194,7 @@ class _OgCardState extends State<OgCard> {
                     Expanded(
                       child: Column(
                         children: <Widget>[
-                          Image.asset('assets/unsplash4.png'),
+                          Image.asset('assets/images/unsplash4.png'),
                           const Text(
                             'Wanda Vision',
                             style: TextStyle(
@@ -241,7 +210,7 @@ class _OgCardState extends State<OgCard> {
                     Expanded(
                       child: Column(
                         children: <Widget>[
-                          Image.asset('assets/unsplash5.png'),
+                          Image.asset('assets/images/unsplash5.png'),
                           const Text(
                             'Moon Knight',
                             style: TextStyle(
@@ -257,7 +226,7 @@ class _OgCardState extends State<OgCard> {
                     Expanded(
                       child: Column(
                         children: <Widget>[
-                          Image.asset('assets/unsplash6.png'),
+                          Image.asset('assets/images/unsplash6.png'),
                           const Text(
                             'Daredevil',
                             style: TextStyle(
@@ -273,7 +242,7 @@ class _OgCardState extends State<OgCard> {
                     Expanded(
                       child: Column(
                         children: <Widget>[
-                          Image.asset('assets/unsplash7.png'),
+                          Image.asset('assets/images/unsplash7.png'),
                           const Text(
                             'The Sandman',
                             style: TextStyle(
@@ -289,7 +258,7 @@ class _OgCardState extends State<OgCard> {
                     Expanded(
                       child: Column(
                         children: <Widget>[
-                          Image.asset('assets/unsplash9.png'),
+                          Image.asset('assets/images/unsplash9.png'),
                           const Text(
                             'Stranger things',
                             style: TextStyle(
