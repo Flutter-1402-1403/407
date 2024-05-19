@@ -10,7 +10,7 @@ class PrivacyNotice extends StatefulWidget {
 
 class _PrivacyNoticeState extends State<PrivacyNotice> {
   final forgotPasswordEmail = TextEditingController();
-  final _logincardKey = GlobalKey<FormState>();
+//  final _logincardKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:login_totarial/login/condition_of_use.dart';
 import 'package:login_totarial/login/forgot_password.dart';
 import 'package:login_totarial/login/privacy_notice.dart';
-import 'package:login_totarial/routs/routs.dart';
 
 Heading(String title) {
   return Text(
@@ -37,6 +36,7 @@ Remamberme(String title) {
     ),
   );
 }
+
 Remamberme2(String title) {
   return Text(
     title,
@@ -49,7 +49,6 @@ Remamberme2(String title) {
     ),
   );
 }
-
 
 Input(String label, String hinttext) {
   return InputDecoration(
@@ -86,7 +85,7 @@ Input(String label, String hinttext) {
 TxtBtnFP(String? title) {
   return TextButton(
     onPressed: () {
-      Get.to(const ForgotPassword()); 
+      Get.to(const ForgotPassword());
     },
     child: Text(
       title!,
@@ -110,6 +109,7 @@ TxtBtnCU(String? title) {
     ),
   );
 }
+
 TxtBtnPN(String? title) {
   return TextButton(
     onPressed: () {
@@ -148,6 +148,7 @@ StyleBtn(Color foregroundColor, Color backgroundColor) {
     ),
   );
 }
+
 StyleBtn1(Color foregroundColor, Color backgroundColor) {
   return ElevatedButton.styleFrom(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -163,7 +164,7 @@ StyleBtn1(Color foregroundColor, Color backgroundColor) {
 LineTxt(String title) {
   return Row(
     children: <Widget>[
-       const SizedBox(width: 7),
+      const SizedBox(width: 7),
       Image.asset('assets/images/line.png'),
       const SizedBox(width: 38),
       Text(
@@ -181,10 +182,10 @@ LineTxt(String title) {
     ],
   );
 }
+
 LineTxt2(String title) {
   return Row(
     children: <Widget>[
-       
       Image.asset('assets/images/line.png'),
       const SizedBox(width: 11),
       Text(
@@ -197,9 +198,8 @@ LineTxt2(String title) {
           fontWeight: FontWeight.w400,
         ),
       ),
-      const SizedBox(width:11),
+      const SizedBox(width: 11),
       Image.asset('assets/images/line.png'),
     ],
   );
 }
-

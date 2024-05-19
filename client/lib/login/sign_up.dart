@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:login_totarial/homepage/og.dart';
 import 'package:login_totarial/login/login.dart';
 import 'package:login_totarial/login/resource.dart';
-import 'package:login_totarial/login/resource.dart';
-import 'package:login_totarial/routs/routs.dart';
 import 'package:http/http.dart' as http;
 import 'package:toastification/toastification.dart';
-import 'package:get/get.dart';
 import 'dart:convert';
 import 'dart:io';
 
