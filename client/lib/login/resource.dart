@@ -24,6 +24,26 @@ Heading(String title) {
   );
 }
 
+RatingText(String title) {
+  return Text(
+    title,
+    style: const TextStyle(
+      color: Color.fromARGB(255, 0, 0, 0),
+      decoration: TextDecoration.none,
+      fontFamily: 'Roboto',
+      fontSize: 19,
+      fontWeight: FontWeight.bold,
+      shadows: [
+        Shadow(
+          color: Colors.grey, // Shadow color
+          offset: Offset(2, 2), // Position of the shadow
+          blurRadius: 3, // Spread radius of the shadow
+        ),
+      ],
+    ),
+  );
+}
+
 Remamberme(String title) {
   return Text(
     title,
@@ -145,6 +165,17 @@ StyleBtn(Color foregroundColor, Color backgroundColor) {
     padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
     textStyle: const TextStyle(
       fontSize: 15,
+    ),
+  );
+}
+StyleBtnR(Color foregroundColor, Color backgroundColor) {
+  return ElevatedButton.styleFrom(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    foregroundColor: foregroundColor,
+    backgroundColor: backgroundColor,
+    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+    textStyle: const TextStyle(
+      fontSize: 11,
     ),
   );
 }

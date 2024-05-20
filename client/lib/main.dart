@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:login_totarial/routs/routs.dart';
 import 'package:login_totarial/appbar.dart';
 import 'package:get/get.dart';
+
 void main (){
   runApp( const MaterialApp(
     // theme: ThemeData(fontFamily: 'Vazirmatn-Medium'),

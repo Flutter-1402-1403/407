@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:login_totarial/homepage/movie_information.dart';
+import 'package:login_totarial/homepage/rating.dart';
 
 class OgCard extends StatefulWidget {
   const OgCard({super.key});
@@ -152,7 +153,8 @@ class _OgCardState extends State<OgCard> {
                         ),
                         TextButton(
                           onPressed: () {
-                            Get.to(const MovieInformation());
+                            Get.to(
+                               RatingAndReviewsPage());
                           },
                           child: const Text(
                             "See more",

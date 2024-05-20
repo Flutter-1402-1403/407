@@ -6,6 +6,7 @@ import 'package:login_totarial/login/privacy_notice.dart';
 import 'package:login_totarial/login/condition_of_use.dart';
 import 'package:login_totarial/login/forgot_password.dart';
 import 'package:login_totarial/homepage/movie_information.dart';
+import 'package:login_totarial/homepage/rating.dart';
 
 appRoutes() => [
       GetPage(
@@ -44,9 +45,15 @@ appRoutes() => [
         transition: Transition.fade,
         transitionDuration: const Duration(milliseconds: 500),
       ),
-       GetPage(
+      GetPage(
         name: '/MovieInformation',
         page: () => const MovieInformation(),
+        transition: Transition.fade,
+        transitionDuration: const Duration(milliseconds: 500),
+      ),
+      GetPage(
+        name: '/RatingAndReviewsPage',
+        page: () => RatingAndReviewsPage(),
         transition: Transition.fade,
         transitionDuration: const Duration(milliseconds: 500),
       ),
