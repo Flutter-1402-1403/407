@@ -9,9 +9,8 @@ void main (){
     home:  Scaffold(
       resizeToAvoidBottomInset : true,
       appBar: LoginAppbar(),
-      // backgroundColor: Color(0xFFF6C700),
+      //backgroundColor: Colors.white,
       body: MyApp(),
-      
     ),
   ));
 }

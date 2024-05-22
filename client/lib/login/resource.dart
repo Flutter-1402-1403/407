@@ -168,6 +168,19 @@ StyleBtn(Color foregroundColor, Color backgroundColor) {
     ),
   );
 }
+StyleBtnI(Color foregroundColor, Color backgroundColor) {
+  return ElevatedButton.styleFrom(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    foregroundColor: foregroundColor,
+    backgroundColor: backgroundColor,
+    minimumSize: Size(30, 25),
+    padding: const EdgeInsets.symmetric( horizontal: 5),
+    textStyle: const TextStyle(
+      
+      fontSize: 13,
+    ),
+  );
+}
 StyleBtnR(Color foregroundColor, Color backgroundColor) {
   return ElevatedButton.styleFrom(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

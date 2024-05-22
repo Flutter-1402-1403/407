@@ -57,4 +57,10 @@ appRoutes() => [
         transition: Transition.fade,
         transitionDuration: const Duration(milliseconds: 500),
       ),
+       GetPage(
+        name: '/RatingAndReviewsPage',
+        page: () => RatingAndReviewsPage(),
+        transition: Transition.fade,
+        transitionDuration: const Duration(milliseconds: 500),
+      ),
     ];

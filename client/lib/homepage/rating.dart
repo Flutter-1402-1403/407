@@ -73,11 +73,10 @@ class _RatingAndReviewsPageState extends State<RatingAndReviewsPage> {
                     context: context,
                     builder: (context) => RatingDialog(initialRating: _rating),
                   );
-                  if (rating != null) {
-                    setState(() {
-                      _rating = rating;
-                    });
-                  }
+
+                  setState(() {
+                    _rating = rating;
+                  });
                 },
                 child: Row(
                   children: List.generate(5, (index) {
