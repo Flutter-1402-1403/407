@@ -142,61 +142,61 @@ class _LoginState extends State<Login> {
                       Container(
                         width: double.infinity,
                         decoration: ShadowBtn(),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            if (_logincardKey.currentState!.validate()) {
-                              http
-                                  .post(
-                                    Uri.parse(
-                                        'http://192.168.43.154/api/login'),
-                                    headers: {
-                                      HttpHeaders.contentTypeHeader:
-                                          'application/json; charset=UTF-8',
-                                    },
-                                    body: jsonEncode({
-                                      'username': loginUsername.text,
-                                      'password': loginPassword.text,
-                                    }),
-                                  )
-                                  .then((value) => {
-                                        if (value.statusCode == 200)
-                                          {
-                                            toastification.show(
-                                                backgroundColor: Colors.green,
-                                                context: context,
-                                                title: const Text(
-                                                    "Login up successfully"),
-                                                autoCloseDuration:
-                                                    const Duration(seconds: 3)),
-                                            Get.to(const OgCard())
-                                          }
-                                        else
-                                          {
-                                            toastification.show(
-                                                backgroundColor: Colors.red,
-                                                context: context,
-                                                title: const Text(
-                                                    "The information is invalid"),
-                                                autoCloseDuration:
-                                                    const Duration(seconds: 3))
-                                          }
-                                      })
-                                  .onError((error, stackTrace) => {});
-                            } else {
-                              toastification.show(
-                                  backgroundColor: Colors.red,
-                                  context: context,
-                                  title:
-                                      const Text("The information is invalid"),
-                                  autoCloseDuration:
-                                      const Duration(seconds: 3));
-                            }
-                            Get.to(const OgCard());
-                          },
-                          style:
-                              StyleBtn(Colors.black, const Color(0xFFF6B100)),
-                          child: const Text("Login"),
-                        ),
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              if (_logincardKey.currentState!.validate()) {
+                                http
+                                    .post(
+                                      Uri.parse(
+                                          'http://192.168.43.154/api/login'),
+                                      headers: {
+                                        HttpHeaders.contentTypeHeader:
+                                            'application/json; charset=UTF-8',
+                                      },
+                                      body: jsonEncode({
+                                        'username': loginUsername.text,
+                                        'password': loginPassword.text,
+                                      }),
+                                    )
+                                    .then((value) => {
+                                          if (value.statusCode == 200)
+                                            {
+                                              toastification.show(
+                                                  backgroundColor: Colors.green,
+                                                  context: context,
+                                                  title: const Text(
+                                                      "Login up successfully"),
+                                                  autoCloseDuration:
+                                                      const Duration(seconds: 3)),
+                                              Get.to(const OgCard())
+                                            }
+                                          else
+                                            {
+                                              toastification.show(
+                                                  backgroundColor: Colors.red,
+                                                  context: context,
+                                                  title: const Text(
+                                                      "The information is invalid"),
+                                                  autoCloseDuration:
+                                                      const Duration(seconds: 3))
+                                            }
+                                        })
+                                    .onError((error, stackTrace) => {});
+                              } else {
+                                toastification.show(
+                                    backgroundColor: Colors.red,
+                                    context: context,
+                                    title:
+                                        const Text("The information is invalid"),
+                                    autoCloseDuration:
+                                        const Duration(seconds: 3));
+                              }
+                              Get.to(const OgCard());
+                            },
+                            style:
+                                StyleBtn(Colors.black, const Color(0xFFF6B100)),
+                            child: const Text("Login"),
+                          ),
                       ),
                       const SizedBox(height: 25),
                       LineTxt('New to IMDb ?'),
