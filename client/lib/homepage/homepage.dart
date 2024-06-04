@@ -11,9 +11,9 @@ class _MyWidgetState extends State<MyWidget> {
   final CarouselController _controller = CarouselController();
   int _current = 0;
   final List<String> imgList = [
-    'https://example.com/shogun.jpg',
-    'https://example.com/shogun.jpg',
-    'https://example.com/shogun.jpg',
+    'assets/images/shogun.jpg',
+    'assets/images/shogun.jpg',
+    'assets/images/shogun.jpg',
   ];
 
   List<Widget> imageSliders() {
@@ -22,7 +22,7 @@ class _MyWidgetState extends State<MyWidget> {
               borderRadius: BorderRadius.all(Radius.circular(5.0)),
               child: Stack(
                 children: <Widget>[
-                  Image.network(
+                  Image.asset(
                     item,
                     fit: BoxFit.cover,
                     width: double.infinity,
@@ -86,7 +86,7 @@ class _MyWidgetState extends State<MyWidget> {
       padding: const EdgeInsets.symmetric(horizontal: 7.0),
       child: Column(
         children: <Widget>[
-          Image.network(imagePath),
+          Image.asset(imagePath),
           Text(
             title,
             style: const TextStyle(
@@ -153,8 +153,8 @@ class _MyWidgetState extends State<MyWidget> {
                         topLeft: Radius.circular(8.0),
                         topRight: Radius.circular(8.0),
                       ),
-                      child: Image.network(
-                        "https://example.com/intro.png",
+                      child: Image.asset(
+                        "assets/images/intro.png",
                         height: 150,
                       ),
                     ),
@@ -288,7 +288,7 @@ class _MyWidgetState extends State<MyWidget> {
               itemCount: 10,
               itemBuilder: (context, index) {
                 return _buildListItem(
-                    'https://example.com/unsplash${index}.png', 'Title $index');
+                    'assets/images/unsplash${index}.png', 'Title $index');
               },
             ),
           )

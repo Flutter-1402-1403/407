@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:login_totarial/login/login.dart';
 
 class UserProfilePage extends StatefulWidget {
   @override
@@ -62,12 +61,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 children: [
                   ChangePasswordButton(onPressed: _toggleChangePassword),
                   LogoutButton(onPressed: () {
-                    Get.to(Login());
+                    // Get.to(Login());
                     // Logout logic here
                   }),
                 ],
               ),
-            if (_showChangePassword) ChangePasswordSection(onToggle: _toggleChangePassword),
+            if (_showChangePassword)
+              ChangePasswordSection(onToggle: _toggleChangePassword),
           ],
         ),
       ),
@@ -120,9 +120,9 @@ class FavoriteMoviesSection extends StatelessWidget {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                MovieCard('Poor Things', 'assets/images/MovieCard1.jpg'),
-                MovieCard('Shawshank Redemption', 'assets/images/MovieCard1.jpg'),
-                MovieCard('12 Angry Men', 'assets/images/MovieCard1.jpg'),
+                MovieCard('Poor Things', 'assets/images/movie1.jpg'),
+                MovieCard('Shawshank Redemption', 'assets/images/movie2.jpg'),
+                MovieCard('12 Angry Men', 'assets/images/movie3.jpg'),
               ],
             ),
           ),
@@ -148,7 +148,8 @@ class MovieCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
-            child: Image.asset(imagePath, fit: BoxFit.cover, height: 150, width: 120),
+            child: Image.asset(imagePath,
+                fit: BoxFit.cover, height: 150, width: 120),
           ),
           SizedBox(height: 5),
           Text(
@@ -265,7 +266,11 @@ class User {
   final String profilePicture;
   final List<String> favorites;
 
-  User({required this.name, required this.email, required this.profilePicture, required this.favorites});
+  User(
+      {required this.name,
+      required this.email,
+      required this.profilePicture,
+      required this.favorites});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
