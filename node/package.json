@@ -1,11 +1,14 @@
 {
   "name": "project-imdb",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "setup": "node setup.js",
     "start": " node ."
   },
   "dependencies": {
-    "sqlite3": "^5.1.7"
+    "argon2": "^0.40.3",
+    "mariadb": "^3.3.0",
+    "nanoid": "^5.0.7"
   }
 }
