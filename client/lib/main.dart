@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:login_totarial/routs/routs.dart';
+import 'package:login_totarial/appbar.dart';
 import 'package:get/get.dart';
+
 void main (){
   runApp( const MaterialApp(
     // theme: ThemeData(fontFamily: 'Vazirmatn-Medium'),
     home:  Scaffold(
       resizeToAvoidBottomInset : true,
-      backgroundColor: Color(0xFFF6C700),
+      appBar: LoginAppbar(),
+      //backgroundColor: Colors.white,
       body: MyApp(),
-      
     ),
   ));
 }
