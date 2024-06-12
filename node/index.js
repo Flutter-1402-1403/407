@@ -23,19 +23,19 @@ const register_statement = await database.prepare("INSERT INTO `users` (`name`, 
 .catch(() => {
   throw new Error("Failed connection to the database.");
 });
-const change_name_statement = await database.prepare("UPDATE `users` SET `name` = ? WHERE `user` = ?")
+const change_name_statement = await database.prepare("UPDATE `users` SET `name` = ? WHERE `id` = ?")
 .catch(() => {
   throw new Error("Failed connection to the database.");
 });
-const change_email_statement = await database.prepare("UPDATE `users` SET `email` = ? WHERE `user` = ?")
+const change_email_statement = await database.prepare("UPDATE `users` SET `email` = ? WHERE `id` = ?")
 .catch(() => {
   throw new Error("Failed connection to the database.");
 });
-const change_phone_statement = await database.prepare("UPDATE `users` SET `phone` = ? WHERE `user` = ?")
+const change_phone_statement = await database.prepare("UPDATE `users` SET `phone` = ? WHERE `id` = ?")
 .catch(() => {
   throw new Error("Failed connection to the database.");
 });
-const change_password_statement = await database.prepare("UPDATE `users` SET `password` = ? WHERE `user` = ?")
+const change_password_statement = await database.prepare("UPDATE `users` SET `password` = ? WHERE `id` = ?")
 .catch(() => {
   throw new Error("Failed connection to the database.");
 });
@@ -287,7 +287,64 @@ createServer({}, (request, response) => {
         response.statusCode = 500;
         response.end();
       });
-    } else if(url.pathname === "/api/change_name"){
+    } else if (/^\/api\/movies\/.+?\/comments$/.test(url.pathname)) {
+      //todo: validate movie
+      const movie = url.searchParams.get("movie");
+      const content = url.searchParams.get("content");
+      if (content?.length > 0) {
+        database.query("SELECT `users`.`id` FROM `tokens`, `users` WHERE `tokens`.`token` = ? AND `users`.`id` = `tokens`.`user`", [request.headers.authorization])
+        .then(result => {
+          if (result[0]) {
+            send_comment_statement.execute([result[0], movie, Date.now(), content])
+            .then(() => {
+              response.statusCode = 200;
+              response.end();
+            });
+          } else {
+            response.statusCode = 401;
+            response.end();
+          }
+        })
+        .catch(() => {
+          response.statusCode = 500;
+          response.end();
+        });
+      } else {
+        response.statusCode = 400;
+        response.end();
+      }
+    } else if (/^\/api\/movies\/.+?\/rate$/.test(url.pathname)) {
+      //todo: validate movie
+      const movie = url.searchParams.get("movie");
+      const rate = Number(url.searchParams.get("rate"));
+      if (rate && rate >= 0 && rate <= 10) {
+        database.query("SELECT `users`.`id` FROM `tokens`, `users` WHERE `tokens`.`token` = ? AND `users`.`id` = `tokens`.`user`", [request.headers.authorization])
+        .then(result => {
+          if (result[0]) {
+            send_rate_statement.execute([result[0], movie, rate, rate])
+            .then(() => {
+              response.statusCode = 200;
+              response.end();
+            });
+          } else {
+            response.statusCode = 401;
+            response.end();
+          }
+        })
+        .catch(() => {
+          response.statusCode = 500;
+          response.end();
+        });
+      } else {
+        response.statusCode = 400;
+        response.end();
+      }
+    } else {
+      response.statusCode = 404;
+      response.end();
+    }
+  } else if (method === "PATCH") {
+    if(url.pathname === "/api/change_name"){
       const name = url.searchParams.get("name");
       if (typeof name === "string") {
         database.query("SELECT `users`.`id` FROM `tokens`, `users` WHERE `tokens`.`token` = ? AND `users`.`id` = `tokens`.`user`", [request.headers.authorization])
@@ -381,58 +438,6 @@ createServer({}, (request, response) => {
               response.end();
             }
           });
-        })
-        .catch(() => {
-          response.statusCode = 500;
-          response.end();
-        });
-      } else {
-        response.statusCode = 400;
-        response.end();
-      }
-    } else if (/^\/api\/movies\/.+?\/comments$/.test(url.pathname)) {
-      //todo: validate movie
-      const movie = url.searchParams.get("movie");
-      const content = url.searchParams.get("content");
-      if (content?.length > 0) {
-        database.query("SELECT `users`.`id` FROM `tokens`, `users` WHERE `tokens`.`token` = ? AND `users`.`id` = `tokens`.`user`", [request.headers.authorization])
-        .then(result => {
-          if (result[0]) {
-            send_comment_statement.execute([result[0], movie, Date.now(), content])
-            .then(() => {
-              response.statusCode = 200;
-              response.end();
-            });
-          } else {
-            response.statusCode = 401;
-            response.end();
-          }
-        })
-        .catch(() => {
-          response.statusCode = 500;
-          response.end();
-        });
-      } else {
-        response.statusCode = 400;
-        response.end();
-      }
-    } else if (/^\/api\/movies\/.+?\/rate$/.test(url.pathname)) {
-      //todo: validate movie
-      const movie = url.searchParams.get("movie");
-      const rate = Number(url.searchParams.get("rate"));
-      if (rate && rate >= 0 && rate <= 10) {
-        database.query("SELECT `users`.`id` FROM `tokens`, `users` WHERE `tokens`.`token` = ? AND `users`.`id` = `tokens`.`user`", [request.headers.authorization])
-        .then(result => {
-          if (result[0]) {
-            send_rate_statement.execute([result[0], movie, rate, rate])
-            .then(() => {
-              response.statusCode = 200;
-              response.end();
-            });
-          } else {
-            response.statusCode = 401;
-            response.end();
-          }
         })
         .catch(() => {
           response.statusCode = 500;
