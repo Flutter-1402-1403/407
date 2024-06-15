@@ -16,16 +16,17 @@ Authorization: <token>
 [get]api/movies/{movie}/comments => ([author, rate, time, content])
 [get]api/favorites(<token>) => ((id, title, avatar)[])
 
-[get]api/top_week => ((id, title, desc, thumbnail)[])
+[get]api/top_week => ((id, title, description, thumbnail)[])
 [get]api/best_movie => (id, title, genre[], imdb_rate, avatar)
-[get]api/top_movie => ((id, title, avatar)[])
-?[get]api/movies(title?, year?, genre?) => ((id, title, avatar, year, rate, rank)[])
+[get]api/top_movies => ((id, title, avatar)[])
+[get]api/movies(title?, year?, genre?) => ((id, title, avatar, year, rate, rank)[])
 
 [get]api/movies/{movie} => (title, description, avatar, thumbnail[], genre[], year, length, imdb_rate, rate, rank, director, actors)
 
 
 
 Server Side Stuff Dont touch Me
+order by rank movies
 [post]api/forget_password(username<email or phone>) => (response code 200)
 genres db
 give a default 0 rate on comment
