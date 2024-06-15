@@ -4,11 +4,11 @@ USE `imdb`;
 CREATE TABLE `users` (
 	`id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`name` CHAR(50) NOT NULL,
-	`phone` CHAR(15) NOT NULL,
+	`username` CHAR(15) NOT NULL,
 	`email` CHAR(255) NOT NULL,
 	`password` CHAR(255) NOT NULL,
 	PRIMARY KEY (`id`),
-	UNIQUE INDEX (`phone`),
+	UNIQUE INDEX (`username`),
 	UNIQUE INDEX (`email`)
 );
 CREATE TABLE `tokens` (
@@ -19,14 +19,22 @@ CREATE TABLE `tokens` (
 );
 CREATE TABLE `movies` (
 	`id` CHAR(15) NOT NULL,
+	`description` VARCHAR(1000) NOT NULL,
 	`title` CHAR(255) NOT NULL,
 	`avatar` TEXT NOT NULL,
 	`thumbnail` TEXT NOT NULL,
 	`year` YEAR NOT NULL,
-	`country` CHAR(60) NOT NULL,
+	`length` CHAR(7) NOT NULL,
 	`rate` FLOAT UNSIGNED NOT NULL,
 	`rank` TINYINT(3) UNSIGNED NOT NULL,
+	`director` CHAR(50) NOT NULL,
+	`actors` CHAR(150) NOT NULL,
 	PRIMARY KEY (`id`)
+);
+CREATE TABLE `thumbnail` (
+	`movie` CHAR(15) NOT NULL,
+	`url` VARCHAR(1000) NOT NULL,
+	FOREIGN KEY (`movie`) REFERENCES `movies` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
 );
 CREATE TABLE `comments` (
 	`author` BIGINT(20) UNSIGNED NOT NULL,

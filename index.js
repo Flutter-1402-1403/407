@@ -19,7 +19,7 @@ const token_statement = await database.prepare("INSERT INTO `tokens` (`token`, `
 .catch(error => {
   throw new Error("Failed connection to the database.");
 });
-const register_statement = await database.prepare("INSERT INTO `users` (`name`, `email`, `phone`, `password`) VALUES (?, ?, ?, ?)")
+const register_statement = await database.prepare("INSERT INTO `users` (`name`, `email`, `username`, `password`) VALUES (?, ?, ?, ?)")
 .catch(() => {
   throw new Error("Failed connection to the database.");
 });
@@ -31,7 +31,7 @@ const change_email_statement = await database.prepare("UPDATE `users` SET `email
 .catch(() => {
   throw new Error("Failed connection to the database.");
 });
-const change_phone_statement = await database.prepare("UPDATE `users` SET `phone` = ? WHERE `id` = ?")
+const change_username_statement = await database.prepare("UPDATE `users` SET `username` = ? WHERE `id` = ?")
 .catch(() => {
   throw new Error("Failed connection to the database.");
 });
@@ -70,7 +70,7 @@ createServer({}, (request, response) => {
       database.query("SELECT `users`.`id` FROM `tokens`, `users` WHERE `tokens`.`token` = ? AND `users`.`id` = `tokens`.`user`", [request.headers.authorization])
       .then(async result => {
         if (result[0]) {
-          database.query("SELECT `movies`.* FROM `favorites`, `movies` WHERE `favorites`.`user` = ? AND `movies`.`id` = `favorites`.`movie`", [result[0]])
+          database.query("SELECT `movies`.`id`, `movies`.`title`, `movies`.`avatar` FROM `favorites`, `movies` WHERE `favorites`.`user` = ? AND `movies`.`id` = `favorites`.`movie`", [result[0]])
           .then(async favorites => {
             if (result[0]) {
               const content = JSON.stringify(favorites ?? []);
@@ -104,7 +104,7 @@ createServer({}, (request, response) => {
     } else if (url.pathname === "/api/movies") {
 
     } else if (/^\/api\/movies\/.+?$/.test(url.pathname)) {
-      database.query("SELECT `title`, `avatar`, `thumbnail`, `year`, `country`, `rate`, `rank` FROM `movies` WHERE `id` = ?", [url.pathname.match(/(?<=^\/api\/movies\/).+?$/g)])
+      database.query("SELECT `title`, `avatar`, `thumbnail`, `year`, `rate`, `rank` FROM `movies` WHERE `id` = ?", [url.pathname.match(/(?<=^\/api\/movies\/).+?$/g)])
       .then(async result => {
         if (result[0]) {
           const content = JSON.stringify(result);
@@ -124,7 +124,7 @@ createServer({}, (request, response) => {
       });
     } else if (/^\/api\/movies\/.+?\/comments$/.test(url.pathname)) {
       //todo: validate movie
-      database.query("SELECT `author`, `time`, `content` FROM `comments` WHERE `movie` = ?", [url.pathname.match(/(?<=^\/api\/movies\/).+?(?=\/comments$)/g)])
+      database.query("SELECT `users`.`name` AS `author`, `comments`.`time`, `comments`.`content`, `rates`.`rate` FROM `users`, `comments`, `rates` WHERE `users`.`id` = `comments`.`author` AND `comments`.`movie` = ? AND `rates`.`user` = `comments`.`author` AND `rates`.`movie` = `comments`.`movie`", [url.pathname.match(/(?<=^\/api\/movies\/).+?(?=\/comments$)/g)])
       .then(async result => {
           const content = JSON.stringify(result);
           response.writeHead(200, {
@@ -137,6 +137,40 @@ createServer({}, (request, response) => {
         response.statusCode = 500;
         response.end();
       });
+    } else if (/^\/api\/movies\/.+?\/rate$/.test(url.pathname)) {
+      //todo: validate movie
+      const movie = url.searchParams.get("movie");
+      if (rate && rate >= 0 && rate <= 10) {
+        database.query("SELECT `users`.`id` FROM `tokens`, `users` WHERE `tokens`.`token` = ? AND `users`.`id` = `tokens`.`user`", [request.headers.authorization])
+        .then(result => {
+          if (result[0]) {
+            database.query("SELECT `rate` FROM `rates` WHERE `user` = ? AND `movie` = ?", [result[0], movie])
+            .then(result => {
+              if (result[0]) {
+                const content = JSON.stringify(result);
+                response.writeHead(200, {
+                  "content-length": content.length,
+                  "content-type": "application/json; charset=UTF-8"
+                });
+                response.end(content);
+              } else {
+                response.statusCode = 404;
+                response.end();
+              }
+            });
+          } else {
+            response.statusCode = 401;
+            response.end();
+          }
+        })
+        .catch(() => {
+          response.statusCode = 500;
+          response.end();
+        });
+      } else {
+        response.statusCode = 400;
+        response.end();
+      }
     } else {
       response.statusCode = 404;
       response.end();
@@ -167,7 +201,7 @@ createServer({}, (request, response) => {
         if (typeof username === "string" && password === "string") {
           hash(password)
           .then(hashed_password => {
-            database.query("SELECT `name` FROM `users` WHERE (`email` = ? OR `phone` = ?) AND `password` = ? LIMIT 1", [username, username, hashed_password])
+            database.query("SELECT `name` FROM `users` WHERE (`email` = ? OR `username` = ?) AND `password` = ? LIMIT 1", [username, username, hashed_password])
             .then(async result => {
               if (result[0]) {
                 let token;
@@ -207,12 +241,12 @@ createServer({}, (request, response) => {
     } else if (url.pathname === "/api/register") {
       const name = url.searchParams.get("name");
       const email = url.searchParams.get("email");
-      const phone = url.searchParams.get("phone");
+      const username = url.searchParams.get("username");
       const password = url.searchParams.get("password");
-      if (typeof name === "string" && /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email) && /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/.test(phone) && typeof password === "string") {
+      if (typeof name === "string" && /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email) && /^(?=.{3,20}$)(?![\d_])(?!.*_{2})[\d\w]+(?<![\d_])$/.test(username) && typeof password === "string") {
         hash(password)
         .then(hashed_password => {
-          register_statement.execute([name, email, phone, hashed_password])
+          register_statement.execute([name, email, username, hashed_password])
           .then(() => {
             database.query("SELECT `id` FROM `users` WHERE `email` = ?", [email])
             .then(async result => {
@@ -392,13 +426,13 @@ createServer({}, (request, response) => {
         response.statusCode = 400;
         response.end();
       }
-    } else if(url.pathname === "/api/change_phone"){
-      const phone = url.searchParams.get("phone");
-      if (/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/.test(phone)) {
+    } else if(url.pathname === "/api/change_username"){
+      const username = url.searchParams.get("username");
+      if (/^(?=.{3,20}$)(?![\d_])(?!.*_{2})[\d\w]+(?<![\d_])$/.test(username)) {
         database.query("SELECT `users`.`id` FROM `tokens`, `users` WHERE `tokens`.`token` = ? AND `users`.`id` = `tokens`.`user`", [request.headers.authorization])
         .then(result => {
           if (result[0]) {
-            change_phone_statement.execute([phone, result[0]])
+            change_username_statement.execute([username, result[0]])
             .then(() => {
               response.statusCode = 200;
               response.end();

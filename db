@@ -1,14 +1,12 @@
 Authorization: <token>
 
-set id of movies
-
-[post]api/login((email or phone) as username, password) => (token, name)
-[post]api/register(email, phone, password) => (token)
+[post]api/login((email or username) as username, password) => (token, name)
+[post]api/register(email, username, password) => (token)
 [post]api/auth(<token>) => (name)
 [delete]api/favorites/{movie}(<token>) => (response code 200)
 [post]api/favorites/{movie}(<token>) => (response code 200)
 [patch]api/change_email(<token>, email) => (response code 200)
-[patch]api/change_phone(<token>, phone) => (response code 200)
+[patch]api/change_username(<token>, username) => (response code 200)
 [patch]api/change_password(<token>, old_password, new_password) => (response code 200)
 [delete]api/logout(<token>) => (response code 200)
 [post]api/movies/{movie}/rate(<token>, rate<float(1.0-10.0)>) => (response code 200)
@@ -16,29 +14,22 @@ set id of movies
 [patch]api/change_name(<token>, name) => (response code 200)
 [get]api/movies/{movie}/rate(<token>) => (<float(1.0-10.0)>)
 [get]api/movies/{movie}/comments => ([author, rate, time, content])
+[get]api/favorites(<token>) => ((id, title, avatar)[])
 
-give a default 0 rate on comment
-crawler
-thumbnail db
-validate movies
-[get]api/favorites(<token>) => ({id, title, avatar, rate}[])
-[get]api/top_week => (title, desc, thumbnail)
-[get]api/best_movie => (title, genre[], imdb_rate, avatar)
-[get]api/main(top week 10, top 10, best movie) => 
-[get]api/movies(title?, year, genre) => ([title, avatar, year, country, rate, rank])
+[get]api/top_week => ((id, title, desc, thumbnail)[])
+[get]api/best_movie => (id, title, genre[], imdb_rate, avatar)
+[get]api/top_movie => ((id, title, avatar)[])
+?[get]api/movies(title?, year?, genre?) => ((id, title, avatar, year, rate, rank)[])
 
-[get]api/movies/{movie} => (title, desc, genre, avatar, thumbnail[], year, country, imdb_rate, rate, rank, director, actors[], length)
+[get]api/movies/{movie} => (title, description, avatar, thumbnail[], genre[], year, length, imdb_rate, rate, rank, director, actors)
 
 
-[get]api/main => ([])
-main(top week 10, top 10, best movie) => {
-best
-}
-top => (name, desc, large image, address)
-the best => (name, desc, tags, rate, small sqare image, address)
-top 10 => (name, medium tall image, address)
-imdb api (rank, score, image, date, describtion, time, genre)
 
+Server Side Stuff Dont touch Me
 [post]api/forget_password(username<email or phone>) => (response code 200)
+genres db
+give a default 0 rate on comment
+crawler(movie(id, title, rate, tumbnails, avatar, director, actors), best(), week(), top 10())
+validate movies
 delete old tokens
 http headers
