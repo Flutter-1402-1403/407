@@ -99,7 +99,28 @@ createServer({}, (request, response) => {
         response.statusCode = 500;
         response.end();
       });
-    } else if (url.pathname === "/api/main"){
+    } else if (url.pathname === "/api/top_week"){
+      //todo: validate movie
+      database.query("SELECT `movies`.`id`, `movies`.`title`, `movies`.`description`, `thumbnails`.`url` FROM `movies`, `thumbnails` WHERE `movies`.`id` = ? AND `thumbnails`.`movie` = `movies`.`id` ORDER BY `movies`.`rank` ASC")
+      .then(async result => {
+        if (result[0]) {
+          const content = JSON.stringify(result);
+          response.writeHead(200, {
+            "content-length": content.length,
+            "content-type": "application/json; charset=UTF-8"
+          });
+          response.end(content);
+        } else {
+          response.statusCode = 404;
+          response.end();
+        }
+      })
+      .catch(() => {
+        response.statusCode = 500;
+        response.end();
+      });
+    } else if (url.pathname === "/api/best_movie"){
+    } else if (url.pathname === "/api/top_movies"){
 
     } else if (url.pathname === "/api/movies") {
 
@@ -177,7 +198,7 @@ createServer({}, (request, response) => {
     }
   } else if (method === "POST") {
     if (url.pathname === "/api/auth"){
-      database.query("SELECT `users`.`name` FROM `tokens`, `users` WHERE `tokens`.`token` = ? AND `users`.`id` = `tokens`.`user`", [request.headers.authorization])
+      database.query("SELECT `users`.`name`, `users`.`username`, `users`.`email` FROM `tokens`, `users` WHERE `tokens`.`token` = ? AND `users`.`id` = `tokens`.`user`", [request.headers.authorization])
       .then(async result => {
         if (result[0]) {
           const content = JSON.stringify({name: result[0].name});
@@ -201,7 +222,7 @@ createServer({}, (request, response) => {
         if (typeof username === "string" && password === "string") {
           hash(password)
           .then(hashed_password => {
-            database.query("SELECT `name` FROM `users` WHERE (`email` = ? OR `username` = ?) AND `password` = ? LIMIT 1", [username, username, hashed_password])
+            database.query("SELECT `name`, `username`, `email` FROM `users` WHERE (`email` = ? OR `username` = ?) AND `password` = ? LIMIT 1", [username, username, hashed_password])
             .then(async result => {
               if (result[0]) {
                 let token;
@@ -218,7 +239,7 @@ createServer({}, (request, response) => {
                     }
                   });
                 }
-                const content = JSON.stringify({token, name: result[0].name});
+                const content = JSON.stringify({token, ...result[0]});
                 response.writeHead(200, {
                   "content-length": content.length,
                   "content-type": "application/json; charset=UTF-8"

@@ -31,7 +31,7 @@ CREATE TABLE `movies` (
 	`actors` CHAR(150) NOT NULL,
 	PRIMARY KEY (`id`)
 );
-CREATE TABLE `thumbnail` (
+CREATE TABLE `thumbnails` (
 	`movie` CHAR(15) NOT NULL,
 	`url` VARCHAR(1000) NOT NULL,
 	FOREIGN KEY (`movie`) REFERENCES `movies` (`id`) ON UPDATE CASCADE ON DELETE CASCADE

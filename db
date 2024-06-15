@@ -1,8 +1,8 @@
 Authorization: <token>
 
-[post]api/login((email or username) as username, password) => (token, name)
-[post]api/register(email, username, password) => (token)
-[post]api/auth(<token>) => (name)
+[post]api/login((email or username) as username, password) => (token, name, username, email)
+[post]api/register(name, email, username, password) => (token)
+[post]api/auth(<token>) => (name, username, email)
 [delete]api/favorites/{movie}(<token>) => (response code 200)
 [post]api/favorites/{movie}(<token>) => (response code 200)
 [patch]api/change_email(<token>, email) => (response code 200)
