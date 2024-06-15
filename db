@@ -17,18 +17,13 @@ Authorization: <token>
 [get]api/favorites(<token>) => ((id, title, avatar)[])
 [get]api/best_movie => (id, title, genre[], imdb_rate, avatar)
 [get]api/top_movies => ((id, title, avatar)[])
-[get]api/movies/{movie} => (title, description, avatar, thumbnail[], genre[], year, length, imdb_rate, rate, rank, director, actors)
-
+[get]api/movies/{movie} => (title, description, avatar, thumbnails[], genre[], year, length, imdb_rate, rate, rank, director, actors)
 ?[get]api/top_week => ((id, title, description, thumbnail)[])
+[get]api/movies(title?, year?, genre?) => ((id, title, avatar, year, imdb_rate)[])
 
-[get]api/movies(title?, year?, genre?) => ((id, title, avatar, year, rate, rank)[])
+crawler(movie(description, director, actors, thumbnails, genres), week, all)
 
 Server Side Stuff Dont touch Me
-genres db
-crawler(movie(id, title, rate, tumbnails, avatar, director, actors), best(), week(movie, rank), top 10())
-give a default 0 rate on comment
-order by rank movies
-
 validate movies
 delete old tokens
 http headers

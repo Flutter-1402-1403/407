@@ -43,6 +43,10 @@ const send_comment_statement = await database.prepare("INSERT INTO `comments` (`
 .catch(() => {
   throw new Error("Failed connection to the database.");
 });
+const send_comment_rate_statement = await database.prepare("INSERT INTO `rates` (`user`, `movie`, `rate`) VALUES (?, ?, 5) ON DUPLICATE KEY UPDATE `rate` = `rate`")
+.catch(() => {
+  throw new Error("Failed connection to the database.");
+});
 const send_rate_statement = await database.prepare("INSERT INTO `rates` (`user`, `movie`, `rate`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `rate` = ?")
 .catch(() => {
   throw new Error("Failed connection to the database.");
@@ -157,13 +161,51 @@ createServer({}, (request, response) => {
         response.end();
       });
     } else if (url.pathname === "/api/movies") {
-      Promise.all(database.query("SELECT `movies`.`title`, `movies`.`description`, `movies`.`avatar`, `movies`.`year`, `movies`.`length`, `movies`.`rate` AS `imdb_rate`, AVG(`rates`.`rate`) AS `rate`, `movies`.`rank`, `movies`.`director`, `movies`.`actors` FROM `movies`, `rates` WHERE `rates`.`movie` = `movies`.`id` GROUP BY `rates`.`movie`"))
-    } else if (/^\/api\/movies\/.+?$/.test(url.pathname)) {
-      const movie = url.pathname.match(/(?<=^\/api\/movies\/).+?$/g);
-      Promise.all(database.query("SELECT `movies`.`title`, `movies`.`description`, `movies`.`avatar`, `movies`.`year`, `movies`.`length`, `movies`.`rate` AS `imdb_rate`, AVG(`rates`.`rate`) AS `rate`, `movies`.`rank`, `movies`.`director`, `movies`.`actors` FROM `movies`, `rates` WHERE `movies`.`id` = ? AND `rates`.`movie` = `movies`.`id` GROUP BY `rates`.`movie`", [movie], ))
+      let filter = [];
+      let values = [];
+      const title = url.searchParams.get("title");
+      const year = Number(url.searchParams.get("year"));
+      const genre = url.searchParams.get("genre")?.toLowerCase();
+      if (title?.length > 0) {
+        filter.push("CHARINDEX(?, `movies`.`title`) > 0");
+        values.push(title);
+      }
+      if (year > 0) {
+        filter.push("`movies`.`year` = ?");
+        values.push(year);
+      }
+      if (title?.length > 0) {
+        filter.push("`genres`.`genre` = ? AND `movies`.`id` = `genres`.`movie`");
+        values.push(genre);
+      }
+      filter.join(" AND ");
+      if (filter.length > 0) {
+        filter = `WHERE ${filter}`;
+      }
+      database.query("SELECT `movies`.`id`, `movies`.`title`, `movies`.`avatar`, `movies`.`year`, `movies`.`rate` AS `imdb_rate` FROM `movies`, `genres` " + filter + " ORDER BY `movies`.`rank` LIMIT 100", values)
       .then(async result => {
         if (result[0]) {
-          const content = JSON.stringify(result[0]);
+          const content = JSON.stringify(result);
+          response.writeHead(200, {
+            "content-length": content.length,
+            "content-type": "application/json; charset=UTF-8"
+          });
+          response.end(content);
+        } else {
+          response.statusCode = 404;
+          response.end();
+        }
+      })
+      .catch(() => {
+        response.statusCode = 500;
+        response.end();
+      });
+    } else if (/^\/api\/movies\/.+?$/.test(url.pathname)) {
+      const movie = url.pathname.match(/(?<=^\/api\/movies\/).+?$/g);
+      Promise.all(database.query("SELECT `movies`.`title`, `movies`.`description`, `movies`.`avatar`, `movies`.`year`, `movies`.`length`, `movies`.`rate` AS `imdb_rate`, AVG(`rates`.`rate`) AS `rate`, `movies`.`rank`, `movies`.`director`, `movies`.`actors` FROM `movies`, `rates` WHERE `movies`.`id` = ? AND `rates`.`movie` = `movies`.`id` GROUP BY `rates`.`movie`", [movie]), database.query("SELECT `url` FROM `thumbnails` WHERE `thumbnails`.`movie` = ?", [movie]), database.query("SELECT `genre` FROM `genres` WHERE `movie` = ?", [movie]))
+      .then(async result => {
+        if (result[0][0]) {
+          const content = JSON.stringify({...result[0][0], thumbnails: result[1].map((value) => value.url), genres: result[2].map((value) => value.genre)});
           response.writeHead(200, {
             "content-length": content.length,
             "content-type": "application/json; charset=UTF-8"
@@ -264,7 +306,7 @@ createServer({}, (request, response) => {
                 let keep = true;
                 while (keep) {
                   token = nanoid(255);
-                  await token_statement.execute([token, user])
+                  await token_statement.execute([token, result[0].id])
                   .then(() => {
                     keep = false;
                   })
@@ -385,7 +427,7 @@ createServer({}, (request, response) => {
         database.query("SELECT `users`.`id` FROM `tokens`, `users` WHERE `tokens`.`token` = ? AND `users`.`id` = `tokens`.`user`", [request.headers.authorization])
         .then(result => {
           if (result[0]) {
-            send_comment_statement.execute([result[0], movie, Date.now(), content])
+            Promise.all(send_comment_statement.execute([result[0], movie, Date.now(), content]), send_comment_rate_statement.execute(result[0], movie))
             .then(() => {
               response.statusCode = 200;
               response.end();
