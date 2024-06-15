@@ -29,7 +29,8 @@ CREATE TABLE `movies` (
 	`rank` TINYINT(3) UNSIGNED NOT NULL,
 	`director` CHAR(50) NOT NULL,
 	`actors` CHAR(150) NOT NULL,
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`id`),
+	UNIQUE INDEX (`rank`)
 );
 CREATE TABLE `thumbnails` (
 	`movie` CHAR(15) NOT NULL,
@@ -62,5 +63,12 @@ CREATE TABLE `genres` (
 	`genre` CHAR(15) NOT NULL,
 	`movie` CHAR(15) NOT NULL,
 	PRIMARY KEY (`genre`, `movie`),
+	FOREIGN KEY (`movie`) REFERENCES `movies` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
+);
+CREATE TABLE `top_week` (
+	`movie` CHAR(15) NOT NULL,
+	`rank` TINYINT(3) UNSIGNED NOT NULL,
+	PRIMARY KEY (`movie`),
+	UNIQUE INDEX (`rank`),
 	FOREIGN KEY (`movie`) REFERENCES `movies` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
 );

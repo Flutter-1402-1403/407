@@ -100,8 +100,7 @@ createServer({}, (request, response) => {
         response.end();
       });
     } else if (url.pathname === "/api/top_week"){
-      //todo: validate movie
-      database.query("SELECT `movies`.`id`, `movies`.`title`, `movies`.`description`, `thumbnails`.`url` FROM `movies`, `thumbnails` WHERE `movies`.`id` = ? AND `thumbnails`.`movie` = `movies`.`id` ORDER BY `movies`.`rank` ASC")
+      database.query("SELECT `movies`.`id`, `movies`.`title`, `movies`.`description`, `thumbnails`.`url` FROM `movies`, `thumbnails`, `top_week` WHERE `movies`.`id` = `top_week`.`movie` AND `thumbnails`.`movie` = `movies`.`id` ORDER BY `movies`.`rank` ASC")
       .then(async result => {
         if (result[0]) {
           const content = JSON.stringify(result);
@@ -120,15 +119,51 @@ createServer({}, (request, response) => {
         response.end();
       });
     } else if (url.pathname === "/api/best_movie"){
+      database.query("SELECT `id`, `title`, `rate` AS `imdb_rate`, `avatar` FROM `movies` WHERE `rank` = 1")
+      .then(async result => {
+        if (result[0]) {
+          const content = JSON.stringify(result[0]);
+          response.writeHead(200, {
+            "content-length": content.length,
+            "content-type": "application/json; charset=UTF-8"
+          });
+          response.end(content);
+        } else {
+          response.statusCode = 404;
+          response.end();
+        }
+      })
+      .catch(() => {
+        response.statusCode = 500;
+        response.end();
+      });
     } else if (url.pathname === "/api/top_movies"){
-
-    } else if (url.pathname === "/api/movies") {
-
-    } else if (/^\/api\/movies\/.+?$/.test(url.pathname)) {
-      database.query("SELECT `title`, `avatar`, `thumbnail`, `year`, `rate`, `rank` FROM `movies` WHERE `id` = ?", [url.pathname.match(/(?<=^\/api\/movies\/).+?$/g)])
+      database.query("SELECT `id`, `title`, `avatar` FROM `movies` ORDER BY `rank` ASC LIMIT 10")
       .then(async result => {
         if (result[0]) {
           const content = JSON.stringify(result);
+          response.writeHead(200, {
+            "content-length": content.length,
+            "content-type": "application/json; charset=UTF-8"
+          });
+          response.end(content);
+        } else {
+          response.statusCode = 404;
+          response.end();
+        }
+      })
+      .catch(() => {
+        response.statusCode = 500;
+        response.end();
+      });
+    } else if (url.pathname === "/api/movies") {
+      Promise.all(database.query("SELECT `movies`.`title`, `movies`.`description`, `movies`.`avatar`, `movies`.`year`, `movies`.`length`, `movies`.`rate` AS `imdb_rate`, AVG(`rates`.`rate`) AS `rate`, `movies`.`rank`, `movies`.`director`, `movies`.`actors` FROM `movies`, `rates` WHERE `rates`.`movie` = `movies`.`id` GROUP BY `rates`.`movie`"))
+    } else if (/^\/api\/movies\/.+?$/.test(url.pathname)) {
+      const movie = url.pathname.match(/(?<=^\/api\/movies\/).+?$/g);
+      Promise.all(database.query("SELECT `movies`.`title`, `movies`.`description`, `movies`.`avatar`, `movies`.`year`, `movies`.`length`, `movies`.`rate` AS `imdb_rate`, AVG(`rates`.`rate`) AS `rate`, `movies`.`rank`, `movies`.`director`, `movies`.`actors` FROM `movies`, `rates` WHERE `movies`.`id` = ? AND `rates`.`movie` = `movies`.`id` GROUP BY `rates`.`movie`", [movie], ))
+      .then(async result => {
+        if (result[0]) {
+          const content = JSON.stringify(result[0]);
           response.writeHead(200, {
             "content-length": content.length,
             "content-type": "application/json; charset=UTF-8"
