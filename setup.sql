@@ -2,7 +2,7 @@ DROP DATABASE IF EXISTS `imdb`;
 CREATE DATABASE `imdb` /*!40100 COLLATE 'utf8mb4_unicode_ci' */;
 USE `imdb`;
 CREATE TABLE `users` (
-	`id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`name` CHAR(50) NOT NULL,
 	`username` CHAR(15) NOT NULL,
 	`email` CHAR(255) NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE `users` (
 );
 CREATE TABLE `tokens` (
 	`token` CHAR(255) NOT NULL,
-	`user` BIGINT(20) UNSIGNED NOT NULL,
+	`user` INT(10) UNSIGNED NOT NULL,
 	PRIMARY KEY (`token`),
 	FOREIGN KEY (`user`) REFERENCES `users` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -23,11 +23,11 @@ CREATE TABLE `movies` (
 	`description` VARCHAR(1000) NOT NULL,
 	`avatar` TEXT NOT NULL,
 	`year` YEAR NOT NULL,
-	`length` CHAR(7) NOT NULL,
+	`duration` CHAR(7) NOT NULL,
 	`rate` FLOAT UNSIGNED NOT NULL,
 	`rank` TINYINT(3) UNSIGNED NOT NULL,
-	`director` CHAR(50) NOT NULL,
-	`actors` CHAR(150) NOT NULL,
+	`directors` VARCHAR(1000) NOT NULL,
+	`actors` VARCHAR(1000) NOT NULL,
 	PRIMARY KEY (`id`),
 	UNIQUE INDEX (`rank`)
 );
@@ -37,7 +37,7 @@ CREATE TABLE `thumbnails` (
 	FOREIGN KEY (`movie`) REFERENCES `movies` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
 );
 CREATE TABLE `comments` (
-	`author` BIGINT(20) UNSIGNED NOT NULL,
+	`author` INT(10) UNSIGNED NOT NULL,
 	`movie` CHAR(15) NOT NULL,
 	`time` DATETIME NOT NULL,
 	`content` CHAR(255) NOT NULL,
@@ -45,14 +45,14 @@ CREATE TABLE `comments` (
 	FOREIGN KEY (`movie`) REFERENCES `movies` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
 );
 CREATE TABLE `rates` (
-	`user` BIGINT(20) UNSIGNED NOT NULL,
+	`user` INT(10) UNSIGNED NOT NULL,
 	`movie` CHAR(15) NOT NULL,
 	`rate` FLOAT NOT NULL,
 	FOREIGN KEY (`user`) REFERENCES `users` (`id`) ON UPDATE CASCADE ON DELETE CASCADE,
 	FOREIGN KEY (`movie`) REFERENCES `movies` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
 );
 CREATE TABLE `favorites` (
-	`user` BIGINT(20) UNSIGNED NOT NULL,
+	`user` INT(10) UNSIGNED NOT NULL,
 	`movie` CHAR(15) NOT NULL,
 	PRIMARY KEY (`user`, `movie`),
 	FOREIGN KEY (`movie`) REFERENCES `movies` (`id`) ON UPDATE CASCADE ON DELETE CASCADE,

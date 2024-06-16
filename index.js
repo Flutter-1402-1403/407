@@ -15,8 +15,40 @@ const database = await createConnection({
 .catch(() => {
   throw new Error("Failed connection to the database.");
 });
+const movie_add_statement = await database.prepare("INSERT INTO `movies` (`id`, `title`, `description`, `avatar`, `year`, `duration`, `rate`, `rank`, `directors`, `actors`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE `avatar` = ?, `rate` = ?, `rank` = ?")
+.catch(() => {
+  throw new Error("Failed connection to the database.");
+});
+const movie_add_week_statement = await database.prepare("INSERT INTO `movies` (`id`, `title`, `description`, `avatar`, `year`, `duration`, `rate`, `rank`, `directors`, `actors`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE `id` = `id`")
+.catch(() => {
+  throw new Error("Failed connection to the database.");
+});
+const thumbnail_add_statement = await database.prepare("INSERT INTO `thumbnails` (`url`, `movie`) VALUES (?, ?)")
+.catch(() => {
+  throw new Error("Failed connection to the database.");
+});
+const thumbnail_remove_statement = await database.prepare("DELETE FROM `thumbnails` WHERE `movie` = ?")
+.catch(() => {
+  throw new Error("Failed connection to the database.");
+});
+const genre_add_statement = await database.prepare("INSERT INTO `genres` (`genre`, `movie`) VALUES (?, ?)")
+.catch(() => {
+  throw new Error("Failed connection to the database.");
+});
+const genre_remove_statement = await database.prepare("DELETE FROM `genres` WHERE `movie` = ?")
+.catch(() => {
+  throw new Error("Failed connection to the database.");
+});
+const week_add_statement = await database.prepare("INSERT INTO `top_week` (`movie`, `rank`) VALUES (?, ?)")
+.catch(() => {
+  throw new Error("Failed connection to the database.");
+});
+const week_remove_statement = await database.prepare("DELETE `movies` FROM `movies` INNER JOIN `top_week` ON `movies`.`id` = `top_week`.`movie`")
+.catch(() => {
+  throw new Error("Failed connection to the database.");
+});
 const token_statement = await database.prepare("INSERT INTO `tokens` (`token`, `user`) VALUES (?, ?)")
-.catch(error => {
+.catch(() => {
   throw new Error("Failed connection to the database.");
 });
 const register_statement = await database.prepare("INSERT INTO `users` (`name`, `email`, `username`, `password`) VALUES (?, ?, ?, ?)")
@@ -65,6 +97,83 @@ const remove_favorite_statement = await database.prepare("DELETE FROM `favorites
 });
 
 console.log("Server Satate: Setting up the server.");
+
+async function FetchUpdates () {
+  console.log('Registry: registration started.');
+  await fetch("https://www.imdb.com/chart/top/")
+  .then(async (response) => {
+    await response.text()
+    .then(async (text) => {
+      await week_remove_statement.execute();
+      const movies = JSON.parse(text.match(/(?<=<script type="application\/ld\+json">).*?(?=<\/script>)/g)).itemListElement;
+      for (let i = 0;i < 100;i++) {
+        await fetch(movies[i].item.url)
+        .then(async (response) => {
+          await response.text()
+          .then(async (text) => {
+            const movie = JSON.parse(text.match(/(?<=<script type="application\/ld\+json">).*?(?=<\/script>)/g));
+            const id = movie.url.match(/(?<=https:\/\/www.imdb.com\/title\/).*?(?=\/)/g)[0];
+            await movie_add_statement.execute([id, movie.name, movie.description, movie.image, movie.datePublished.slice(0, 4), movie.duration.replace("PT", "").replace("H", "H "), movie.aggregateRating.ratingValue, i + 1, movie.director.map(director => director.name).join(", "), movie.actor.map(actor => actor.name).join(", "), movie.image, movie.aggregateRating.ratingValue, i + 1]);
+            await thumbnail_remove_statement.execute([id]);
+            const thumbnails = text.match(/(?<=ipc-photo__photo-image ipc-media__img" style="width:100%">).*?(?=<\/div>)/g);
+            for (let i = 0;i < thumbnails.length;i++) {
+              const thumbnail = thumbnails[i].match(/(https:\/\/m.media-amazon.com.*?\.jpg)/g)
+              await thumbnail_add_statement.execute([thumbnail[0], id]);
+            }
+            await genre_remove_statement.execute([id]);
+            for (let i = 0;i < movie.genre.length;i++) {
+              await genre_add_statement.execute([movie.genre[i], id]);
+            }
+          });
+        })
+        .catch(() => {
+          console.log(`Registry: '${movies[i].item.name}' registration failed.`);
+        });
+      }
+    });
+  })
+  .catch(() => {
+    console.log(`Registry: movie list connection failed.`);
+  });
+  await fetch("https://m.imdb.com/chart/boxoffice/")
+  .then(async (response) => {
+    await response.text()
+    .then(async (text) => {
+      const movies = JSON.parse(text.match(/(?<=<script type="application\/ld\+json">).*?(?=<\/script>)/g)).itemListElement;
+      for (let i = 0;i < movies.length;i++) {
+        await fetch(movies[i].item.url)
+        .then(async (response) => {
+          await response.text()
+          .then(async (text) => {
+            const movie = JSON.parse(text.match(/(?<=<script type="application\/ld\+json">).*?(?=<\/script>)/g));
+            const id = movie.url.match(/(?<=https:\/\/www.imdb.com\/title\/).*?(?=\/)/g)[0];
+            await movie_add_week_statement.execute([id, movie.name, movie.description, movie.image, movie.datePublished.slice(0, 4), movie.duration.replace("PT", "").replace("H", "H "), movie.aggregateRating.ratingValue, i + 101, movie.director.map(director => director.name).join(", "), movie.actor.map(actor => actor.name).join(", "), movie.image, movie.aggregateRating.ratingValue]);
+            await thumbnail_remove_statement.execute([id]);
+            const thumbnails = text.match(/(?<=ipc-photo__photo-image ipc-media__img" style="width:100%">).*?(?=<\/div>)/g);
+            for (let i = 0;i < thumbnails.length;i++) {
+              const thumbnail = thumbnails[i].match(/(https:\/\/m.media-amazon.com.*?\.jpg)/g)
+              await thumbnail_add_statement.execute([thumbnail[0], id]);
+            }
+            await genre_remove_statement.execute([id]);
+            for (let i = 0;i < movie.genre.length;i++) {
+              await genre_add_statement.execute([movie.genre[i], id]);
+            }
+            await week_add_statement.execute([id, i + 1]);
+          });
+        })
+        .catch(() => {
+          console.log(`Registry: '${movies[i].item.name}' top week registration failed.`);
+        });
+      }
+    });
+  })
+  .catch(() => {
+    console.log(`Registry: top week list connection failed.`);
+  });
+  console.log('Registry: registration finished.');
+}
+
+setInterval(() => FetchUpdates(), 3600000);
 
 createServer({}, (request, response) => {
   const url = new URL(request.url, "http://127.0.0.1");
@@ -165,7 +274,7 @@ createServer({}, (request, response) => {
       let values = [];
       const title = url.searchParams.get("title");
       const year = Number(url.searchParams.get("year"));
-      const genre = url.searchParams.get("genre")?.toLowerCase();
+      const genre = url.searchParams.get("genre");
       if (title?.length > 0) {
         filter.push("CHARINDEX(?, `movies`.`title`) > 0");
         values.push(title);
@@ -202,7 +311,7 @@ createServer({}, (request, response) => {
       });
     } else if (/^\/api\/movies\/.+?$/.test(url.pathname)) {
       const movie = url.pathname.match(/(?<=^\/api\/movies\/).+?$/g);
-      Promise.all(database.query("SELECT `movies`.`title`, `movies`.`description`, `movies`.`avatar`, `movies`.`year`, `movies`.`length`, `movies`.`rate` AS `imdb_rate`, AVG(`rates`.`rate`) AS `rate`, `movies`.`rank`, `movies`.`director`, `movies`.`actors` FROM `movies`, `rates` WHERE `movies`.`id` = ? AND `rates`.`movie` = `movies`.`id` GROUP BY `rates`.`movie`", [movie]), database.query("SELECT `url` FROM `thumbnails` WHERE `thumbnails`.`movie` = ?", [movie]), database.query("SELECT `genre` FROM `genres` WHERE `movie` = ?", [movie]))
+      Promise.all(database.query("SELECT `movies`.`title`, `movies`.`description`, `movies`.`avatar`, `movies`.`year`, `movies`.`duration`, `movies`.`rate` AS `imdb_rate`, AVG(`rates`.`rate`) AS `rate`, `movies`.`rank`, `movies`.`directors`, `movies`.`actors` FROM `movies`, `rates` WHERE `movies`.`id` = ? AND `rates`.`movie` = `movies`.`id` GROUP BY `rates`.`movie`", [movie]), database.query("SELECT `url` FROM `thumbnails` WHERE `thumbnails`.`movie` = ?", [movie]), database.query("SELECT `genre` FROM `genres` WHERE `movie` = ?", [movie]))
       .then(async result => {
         if (result[0][0]) {
           const content = JSON.stringify({...result[0][0], thumbnails: result[1].map((value) => value.url), genres: result[2].map((value) => value.genre)});
@@ -296,9 +405,8 @@ createServer({}, (request, response) => {
     } else if (url.pathname === "/api/login"){
         const username = url.searchParams.get("username");
         const password = url.searchParams.get("password");
-        console.log(username, password);
-        if (typeof username === "string" && password === "string") {
-          database.query("SELECT `name`, `username`, `email`, `password` FROM `users` WHERE (`email` = ? OR `username` = ?) LIMIT 1", [username, username])
+        if (typeof username === "string" && typeof password === "string") {
+          database.query("SELECT `id`, `name`, `username`, `email`, `password` FROM `users` WHERE (`email` = ? OR `username` = ?) LIMIT 1", [username, username])
           .then(async result => {
             if (result[0] && await verify(result[0].password, password)) {
               let token;
@@ -351,7 +459,7 @@ createServer({}, (request, response) => {
                 let keep = true;
                 while (keep) {
                   token = nanoid(255);
-                  await token_statement.execute([token, user])
+                  await token_statement.execute([token, result[0].id])
                   .then(() => {
                     keep = false;
                   })
@@ -624,30 +732,4 @@ createServer({}, (request, response) => {
     response.end();
   }
 }).listen(80);
-//genres thumbnails
-/*const movie_add_statement = database.query("INSERT INTO `movies` (`id`, `title`, `description`, `avatar`, `year`, `length`, `rate`, `rank`, `director`, `actors`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-const movie_update_statement = database.query("UPDATE `movies` SET `title` = ?, `description` = ?, `avatar` = ?, `rate` = ?, `rank` = ? WHERE `id` = ?");
-const thumbnail_add_statement = database.query("INSERT INTO `thumbnails` (`url`, `movie`) VALUES (?, ?)");
-const thumbnail_remove_statement = database.query("DELETE FROM `thumbnails` WHERE `movie` = ?");
-const genre_add_statement = database.query("INSERT INTO `genres` (`genre`, `movie`) VALUES (?, ?)");
-function FetchUpdates () {
-  fetch("https://www.imdb.com/chart/top/").then(async (response) => {
-    response.text().then(async (text) => {
-      const movies = JSON.parse(text.match(/(?<=<script type="application\/ld\+json">).*?(?=<\/script>)/g)).itemListElement;
-      for (let i = 0;i < movies.length;i++) {
-        const movie = movies[i].item;
-        const id = movie.url.match(/(?=https:\/\/www.imdb.com\/title\/).*?(?<!\/)/g);
-        await database.query("SELECT 1 FROM `movies` WHERE `id` = ?", [id])
-        .then(result => {
-          if (result[0]) {
-          }
-        })
-        .catch(() => {
-          console.log(`Registry: '${movie.name}' registration failed.`);
-        });
-      }
-    });
-  })
-}*/
-
 console.log("Server Satate: Ready.");
