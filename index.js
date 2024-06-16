@@ -173,7 +173,7 @@ async function FetchUpdates () {
   console.log('Registry: registration finished.');
 }
 
-setInterval(() => FetchUpdates(), 3600000);
+setInterval(() => FetchUpdates(), 21600000);
 
 createServer({}, (request, response) => {
   const url = new URL(request.url, "http://127.0.0.1");
