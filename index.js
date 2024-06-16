@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { hash } from 'argon2';
+import { hash, verify } from 'argon2';
 import { createConnection } from 'mariadb';
 import { createServer } from "node:http";
 
@@ -296,37 +296,35 @@ createServer({}, (request, response) => {
     } else if (url.pathname === "/api/login"){
         const username = url.searchParams.get("username");
         const password = url.searchParams.get("password");
+        console.log(username, password);
         if (typeof username === "string" && password === "string") {
-          hash(password)
-          .then(hashed_password => {
-            database.query("SELECT `name`, `username`, `email` FROM `users` WHERE (`email` = ? OR `username` = ?) AND `password` = ? LIMIT 1", [username, username, hashed_password])
-            .then(async result => {
-              if (result[0]) {
-                let token;
-                let keep = true;
-                while (keep) {
-                  token = nanoid(255);
-                  await token_statement.execute([token, result[0].id])
-                  .then(() => {
-                    keep = false;
-                  })
-                  .catch(error => {
-                    if (error.errno !== 1062) {
-                      throw error;
-                    }
-                  });
-                }
-                const content = JSON.stringify({token, ...result[0]});
-                response.writeHead(200, {
-                  "content-length": content.length,
-                  "content-type": "application/json; charset=UTF-8"
+          database.query("SELECT `name`, `username`, `email`, `password` FROM `users` WHERE (`email` = ? OR `username` = ?) LIMIT 1", [username, username])
+          .then(async result => {
+            if (result[0] && await verify(result[0].password, password)) {
+              let token;
+              let keep = true;
+              while (keep) {
+                token = nanoid(255);
+                await token_statement.execute([token, result[0].id])
+                .then(() => {
+                  keep = false;
+                })
+                .catch(error => {
+                  if (error.errno !== 1062) {
+                    throw error;
+                  }
                 });
-                response.end(content);
-              } else {
-                response.statusCode = 401;
-                response.end();
               }
-            });
+              const content = JSON.stringify({token, ...result[0]});
+              response.writeHead(200, {
+                "content-length": content.length,
+                "content-type": "application/json; charset=UTF-8"
+              });
+              response.end(content);
+            } else {
+              response.statusCode = 401;
+              response.end();
+            }
           })
           .catch(() => {
             response.statusCode = 500;
@@ -552,24 +550,21 @@ createServer({}, (request, response) => {
       const old_password = url.searchParams.get("old_password");
       const new_password = url.searchParams.get("new_password");
       if (typeof old_password === "string" && typeof new_password === "string") {
-        hash(old_password)
-        .then(hashed_old_password => {
-          database.query("SELECT `users`.`id` FROM `tokens`, `users` WHERE `tokens`.`token` = ? AND `users`.`id` = `tokens`.`user` AND `users`.`password` = ?", [request.headers.authorization, hashed_old_password])
-          .then(result => {
-            if (result[0]) {
-              hash(new_password)
-              .then(hashed_new_password => {
-                change_password_statement.execute([hashed_new_password, result[0]])
-                .then(() => {
-                  response.statusCode = 200;
-                  response.end();
-                });
+        database.query("SELECT `users`.`id`, `users`.`password` FROM `tokens`, `users` WHERE `tokens`.`token` = ? AND `users`.`id` = `tokens`.`user`", [request.headers.authorization])
+        .then(async result => {
+          if (result[0] && await verify(result[0].password, old_password)) {
+            hash(new_password)
+            .then(hashed_new_password => {
+              change_password_statement.execute([hashed_new_password, result[0]])
+              .then(() => {
+                response.statusCode = 200;
+                response.end();
               });
-            } else {
-              response.statusCode = 401;
-              response.end();
-            }
-          });
+            });
+          } else {
+            response.statusCode = 401;
+            response.end();
+          }
         })
         .catch(() => {
           response.statusCode = 500;
@@ -629,5 +624,30 @@ createServer({}, (request, response) => {
     response.end();
   }
 }).listen(80);
+//genres thumbnails
+/*const movie_add_statement = database.query("INSERT INTO `movies` (`id`, `title`, `description`, `avatar`, `year`, `length`, `rate`, `rank`, `director`, `actors`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+const movie_update_statement = database.query("UPDATE `movies` SET `title` = ?, `description` = ?, `avatar` = ?, `rate` = ?, `rank` = ? WHERE `id` = ?");
+const thumbnail_add_statement = database.query("INSERT INTO `thumbnails` (`url`, `movie`) VALUES (?, ?)");
+const thumbnail_remove_statement = database.query("DELETE FROM `thumbnails` WHERE `movie` = ?");
+const genre_add_statement = database.query("INSERT INTO `genres` (`genre`, `movie`) VALUES (?, ?)");
+function FetchUpdates () {
+  fetch("https://www.imdb.com/chart/top/").then(async (response) => {
+    response.text().then(async (text) => {
+      const movies = JSON.parse(text.match(/(?<=<script type="application\/ld\+json">).*?(?=<\/script>)/g)).itemListElement;
+      for (let i = 0;i < movies.length;i++) {
+        const movie = movies[i].item;
+        const id = movie.url.match(/(?=https:\/\/www.imdb.com\/title\/).*?(?<!\/)/g);
+        await database.query("SELECT 1 FROM `movies` WHERE `id` = ?", [id])
+        .then(result => {
+          if (result[0]) {
+          }
+        })
+        .catch(() => {
+          console.log(`Registry: '${movie.name}' registration failed.`);
+        });
+      }
+    });
+  })
+}*/
 
 console.log("Server Satate: Ready.");

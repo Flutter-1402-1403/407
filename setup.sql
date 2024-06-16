@@ -19,10 +19,9 @@ CREATE TABLE `tokens` (
 );
 CREATE TABLE `movies` (
 	`id` CHAR(15) NOT NULL,
-	`description` VARCHAR(1000) NOT NULL,
 	`title` CHAR(255) NOT NULL,
+	`description` VARCHAR(1000) NOT NULL,
 	`avatar` TEXT NOT NULL,
-	`thumbnail` TEXT NOT NULL,
 	`year` YEAR NOT NULL,
 	`length` CHAR(7) NOT NULL,
 	`rate` FLOAT UNSIGNED NOT NULL,
@@ -33,8 +32,8 @@ CREATE TABLE `movies` (
 	UNIQUE INDEX (`rank`)
 );
 CREATE TABLE `thumbnails` (
-	`movie` CHAR(15) NOT NULL,
 	`url` VARCHAR(1000) NOT NULL,
+	`movie` CHAR(15) NOT NULL,
 	FOREIGN KEY (`movie`) REFERENCES `movies` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
 );
 CREATE TABLE `comments` (
