@@ -6,7 +6,6 @@ void main() => runApp(const IMDBApp());
 
 class IMDBApp extends StatelessWidget {
   const IMDBApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
